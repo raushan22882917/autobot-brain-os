@@ -236,7 +236,7 @@ export default function JiraBoard() {
     if (!selectedIssue || !commentText.trim()) return;
     setCommentLoading(true);
     try {
-      const res = await fetch(`/api/jira/issues/${selectedIssue.key}/comments`, {
+      const res = await fetch(apiUrl(`/jira/issues/${selectedIssue.key}/comments`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -342,7 +342,9 @@ export default function JiraBoard() {
                   <span className="font-mono text-[11px] px-1.5 py-0.5 rounded"
                     style={{ background: "rgba(239,68,68,0.1)", color: "#ef4444" }}>{bug.key}</span>
                   <span className="text-white/70 truncate flex-1">{bug.summary}</span>
-                  <span className="text-[11px] shrink-0" style={{ color: "#666" }}>{bug.assignee}</span>
+                  <span className="text-[11px] shrink-0" style={{ color: "#666" }}>
+                    {bug.assignee?.name ?? "Unassigned"}
+                  </span>
                   {bug.url && (
                     <a href={bug.url} target="_blank" rel="noreferrer">
                       <ExternalLink className="w-3 h-3 text-white/30 hover:text-white" />
