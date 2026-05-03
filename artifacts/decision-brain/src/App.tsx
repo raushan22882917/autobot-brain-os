@@ -312,6 +312,7 @@ export default function App() {
             <ClerkQueryClientCacheInvalidator />
             <Switch>
               <Route path="/" component={HomeRedirect} />
+              <ProtectedRoute path="/home" component={Landing} />
               <Route path="/sign-in/*?" component={SignInPage} />
               <Route path="/sign-up/*?" component={SignUpPage} />
               

@@ -1,11 +1,10 @@
 import { Link } from "wouter";
 import { BrainCircuit, Shield, Zap, Target, ChevronRight, Network, ArrowRight, TrendingUp, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
-import heroImage from "@assets/Screenshot_2026-05-03_at_16.12.21_1777804951712.png";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
-  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.65, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] } }),
+  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.65, delay: i * 0.12, ease: "easeOut" } }),
 };
 
 const STATS = [
@@ -71,6 +70,9 @@ export default function Landing() {
             <a href="#features" className="hover:text-white transition-colors">Features</a>
             <a href="#proof" className="hover:text-white transition-colors">Results</a>
             <a href="#testimonials" className="hover:text-white transition-colors">Stories</a>
+            <Link href="/analytics">
+              <span className="hover:text-white transition-colors cursor-pointer">Analytics</span>
+            </Link>
           </nav>
           <div className="flex items-center gap-3">
             <Link href="/sign-in">
@@ -156,12 +158,12 @@ export default function Landing() {
 
             {/* Hero visual — animated image */}
             <motion.div custom={2} variants={fadeUp} initial="hidden" animate="show" className="hidden md:block">
-              <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0b0b0b] p-4">
-                <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: "#F87171" }}>
+              <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0b0b0b] p-5">
+                <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: "#F87171" }}>
                   How second brain works
                 </p>
                 <img
-                  src={heroImage}
+                  src={`${import.meta.env.BASE_URL}images/second-brain-transparent.png`}
                   alt="How Decision Brain works for founders"
                   className="block w-full h-auto object-contain rounded-xl"
                 />
@@ -312,16 +314,47 @@ export default function Landing() {
       </main>
 
       {/* ── FOOTER ────────────────────────────────────────────── */}
-      <footer className="border-t border-white/8 py-12 px-6 md:px-10" style={{ background: "#050505" }}>
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "#DC2626" }}>
-              <BrainCircuit className="w-4 h-4 text-white" />
+      <footer className="border-t border-white/8 px-6 md:px-10 py-14" style={{ background: "#050505" }}>
+        <div className="max-w-7xl mx-auto grid gap-10 md:grid-cols-4">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "#DC2626" }}>
+                <BrainCircuit className="w-4 h-4 text-white" />
+              </div>
+              <span className="font-bold text-white">Decision Brain</span>
             </div>
-            <span className="font-bold text-white">Decision Brain</span>
+            <p className="text-sm leading-relaxed text-white/40 max-w-xs">
+              Capture decisions, connect your tools, and build a living second brain for your company.
+            </p>
           </div>
-          <p className="text-sm text-white/30">© {new Date().getFullYear()} Decision Brain OS. All rights reserved.</p>
-          <div className="flex items-center gap-1.5 text-xs text-white/30">
+          <div>
+            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-4" style={{ color: "#DC2626" }}>Product</p>
+            <div className="space-y-3 text-sm text-white/40">
+              <div><Link href="/analytics"><span className="hover:text-white cursor-pointer">Analytics</span></Link></div>
+              <div><Link href="/integrations"><span className="hover:text-white cursor-pointer">Integrations</span></Link></div>
+              <div><Link href="/billing"><span className="hover:text-white cursor-pointer">Billing</span></Link></div>
+            </div>
+          </div>
+          <div>
+            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-4" style={{ color: "#DC2626" }}>Company</p>
+            <div className="space-y-3 text-sm text-white/40">
+              <div><Link href="/dashboard"><span className="hover:text-white cursor-pointer">Dashboard</span></Link></div>
+              <div><Link href="/pricing"><span className="hover:text-white cursor-pointer">Pricing</span></Link></div>
+              <div><Link href="/sign-in"><span className="hover:text-white cursor-pointer">Sign in</span></Link></div>
+            </div>
+          </div>
+          <div>
+            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-4" style={{ color: "#DC2626" }}>What it does</p>
+            <ul className="space-y-3 text-sm text-white/40 leading-relaxed">
+              <li>• Captures from Gmail and Meet</li>
+              <li>• Connects Slack, Jira, and more</li>
+              <li>• Surfaces risks, patterns, and follow-ups</li>
+            </ul>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/30">
+          <p>© {new Date().getFullYear()} Decision Brain OS. All rights reserved.</p>
+          <div className="flex items-center gap-1.5">
             <Shield className="w-3.5 h-3.5" />
             Enterprise-grade security
           </div>
