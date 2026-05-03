@@ -1,7 +1,7 @@
 import { Switch, Route, Router as WouterRouter, Redirect } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ClerkProvider, SignIn, SignUp, Show, useClerk } from "@clerk/react";
-import { Linkedin } from "lucide-react";
+import { Linkedin, ArrowRight } from "lucide-react";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
 import { useEffect, useRef } from "react";
@@ -148,24 +148,72 @@ function SocialAuthButton({ label, href }: { label: string; href: string }) {
   );
 }
 
+function UnifiedAuthForm({
+  title,
+  subtitle,
+  path,
+  oppositePath,
+  socialLabel,
+  socialHref,
+  isSignUp,
+}: {
+  title: string;
+  subtitle: string;
+  path: string;
+  oppositePath: string;
+  socialLabel: string;
+  socialHref: string;
+  isSignUp: boolean;
+}) {
+  return (
+    <div className="w-full max-w-md rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(11,14,20,0.98))] p-8 shadow-2xl">
+      <div className="mb-7 space-y-3">
+        <p className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color: "#DC2626" }}>
+          {isSignUp ? "Get started free" : "Welcome back"}
+        </p>
+        <h1 className="text-4xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>{title}</h1>
+        <p className="text-sm text-white/55 leading-relaxed">{subtitle}</p>
+      </div>
+      <div className="space-y-3 mb-5">
+        <SocialAuthButton label={socialLabel} href={socialHref} />
+      </div>
+      <div className="relative mb-5">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-white/10" />
+        </div>
+        <div className="relative flex justify-center text-[11px] uppercase tracking-[0.24em] text-white/35">
+          <span className="bg-[#0a0a0a] px-3">or continue with email</span>
+        </div>
+      </div>
+      <div className="rounded-2xl border border-white/10 bg-[#0a0a0a] p-4">
+        {isSignUp ? (
+          <SignUp routing="path" path={path} signInUrl={oppositePath} />
+        ) : (
+          <SignIn routing="path" path={path} signUpUrl={oppositePath} />
+        )}
+      </div>
+      <div className="mt-5 text-xs text-white/45 leading-relaxed">
+        By continuing, you agree to our Terms & Privacy.
+      </div>
+    </div>
+  );
+}
+
 function SignInPage() {
   return (
     <div className="flex min-h-[100dvh]" style={{ background: "#080808" }}>
       <AuthImagePanel side="left" />
       <div className="flex flex-1 items-center justify-center px-6 py-12 relative overflow-hidden">
-        <div className="relative z-10 w-full max-w-md rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(11,14,20,0.98))] p-8 shadow-2xl">
-          <div className="mb-8 space-y-3">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color: "#DC2626" }}>Welcome back</p>
-            <h1 className="text-4xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Sign in to Autobot360</h1>
-            <p className="text-sm text-white/55 leading-relaxed">Resume your decision OS and keep your team’s context in sync.</p>
-          </div>
-          <div className="space-y-3 mb-6">
-            <SocialAuthButton label="Continue with LinkedIn" href="https://www.linkedin.com" />
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-[#0a0a0a] p-4">
-            <SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} />
-          </div>
-        </div>
+        <UnifiedAuthForm
+          title="Sign in to Autobot360"
+          subtitle="Resume your decision OS and keep your team’s context in sync."
+          ctaLabel="Sign in"
+          path={`${basePath}/sign-in`}
+          oppositePath={`${basePath}/sign-up`}
+          socialLabel="Continue with LinkedIn"
+          socialHref="https://www.linkedin.com"
+          isSignUp={false}
+        />
       </div>
     </div>
   );
@@ -175,19 +223,16 @@ function SignUpPage() {
   return (
     <div className="flex min-h-[100dvh]" style={{ background: "#080808" }}>
       <div className="flex flex-1 items-center justify-center px-6 py-12 relative overflow-hidden">
-        <div className="relative z-10 w-full max-w-md rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(11,14,20,0.98))] p-8 shadow-2xl">
-          <div className="mb-8 space-y-3">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color: "#DC2626" }}>Get started free</p>
-            <h1 className="text-4xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Build your decision OS</h1>
-            <p className="text-sm text-white/55 leading-relaxed">Create your account and connect your first team signals in minutes.</p>
-          </div>
-          <div className="space-y-3 mb-6">
-            <SocialAuthButton label="Sign up with LinkedIn" href="https://www.linkedin.com" />
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-[#0a0a0a] p-4">
-            <SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} />
-          </div>
-        </div>
+        <UnifiedAuthForm
+          title="Build your decision OS"
+          subtitle="Create your account and connect your first team signals in minutes."
+          ctaLabel="Create account"
+          path={`${basePath}/sign-up`}
+          oppositePath={`${basePath}/sign-in`}
+          socialLabel="Sign up with LinkedIn"
+          socialHref="https://www.linkedin.com"
+          isSignUp={true}
+        />
       </div>
       <AuthImagePanel side="right" />
     </div>
