@@ -156,11 +156,14 @@ export default function Landing() {
 
             {/* Hero visual — animated image */}
             <motion.div custom={2} variants={fadeUp} initial="hidden" animate="show" className="hidden md:block">
-              <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0b0b0b]">
+              <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0b0b0b] p-4">
+                <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: "#F87171" }}>
+                  How second brain works
+                </p>
                 <img
                   src={heroImage}
                   alt="How Decision Brain works for founders"
-                  className="block w-full h-full object-cover"
+                  className="block w-full h-auto object-contain rounded-xl"
                 />
               </div>
             </motion.div>
