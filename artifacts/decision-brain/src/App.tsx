@@ -136,44 +136,32 @@ function AuthImagePanel({ side }: { side: "left" | "right" }) {
 
 function UnifiedAuthForm({
   title,
-  subtitle,
   path,
   oppositePath,
   isSignUp,
 }: {
   title: string;
-  subtitle: string;
   path: string;
   oppositePath: string;
   isSignUp: boolean;
 }) {
   return (
     <div className="w-full max-w-md rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(11,14,20,0.98))] p-8 shadow-2xl">
-      <div className="mb-7 space-y-3">
-        <p className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color: "#DC2626" }}>
-          {isSignUp ? "Get started free" : "Welcome back"}
-        </p>
+      <div className="mb-6 flex items-center gap-3">
+        <img src={logoImage} alt="Autobot360 logo" className="h-11 w-11 rounded-xl object-cover" />
+        <div>
+          <p className="text-lg font-bold text-white leading-none">Autobot360</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.24em]" style={{ color: "#DC2626" }}>Intelligence OS</p>
+        </div>
+      </div>
+      <div className="mb-6">
         <h1 className="text-4xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>{title}</h1>
-        <p className="text-sm text-white/55 leading-relaxed">{subtitle}</p>
       </div>
-      <div className="relative mb-5">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-white/10" />
-        </div>
-        <div className="relative flex justify-center text-[11px] uppercase tracking-[0.24em] text-white/35">
-          <span className="bg-[#0a0a0a] px-3">or continue with email</span>
-        </div>
-      </div>
-      <div className="rounded-2xl border border-white/10 bg-[#0a0a0a] p-4">
-        {isSignUp ? (
-          <SignUp routing="path" path={path} signInUrl={oppositePath} />
-        ) : (
-          <SignIn routing="path" path={path} signUpUrl={oppositePath} />
-        )}
-      </div>
-      <div className="mt-5 text-xs text-white/45 leading-relaxed">
-        By continuing, you agree to our Terms & Privacy.
-      </div>
+      {isSignUp ? (
+        <SignUp routing="path" path={path} signInUrl={oppositePath} />
+      ) : (
+        <SignIn routing="path" path={path} signUpUrl={oppositePath} />
+      )}
     </div>
   );
 }
@@ -185,7 +173,6 @@ function SignInPage() {
       <div className="flex flex-1 items-center justify-center px-6 py-12 relative overflow-hidden">
         <UnifiedAuthForm
           title="Sign in to Autobot360"
-          subtitle="Resume your decision OS and keep your team’s context in sync."
           path={`${basePath}/sign-in`}
           oppositePath={`${basePath}/sign-up`}
           isSignUp={false}
@@ -201,7 +188,6 @@ function SignUpPage() {
       <div className="flex flex-1 items-center justify-center px-6 py-12 relative overflow-hidden">
         <UnifiedAuthForm
           title="Build your decision OS"
-          subtitle="Create your account and connect your first team signals in minutes."
           path={`${basePath}/sign-up`}
           oppositePath={`${basePath}/sign-in`}
           isSignUp={true}
