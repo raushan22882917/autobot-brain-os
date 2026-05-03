@@ -7,10 +7,12 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-[#050505] text-white flex flex-col">
       <header className="sticky top-0 z-50 border-b border-white/10 backdrop-blur-xl" style={{ background: "rgba(5,5,5,0.85)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+          <Link href="/">
+            <div className="flex items-center gap-2.5 cursor-pointer">
             <img src={logoImage} alt="Autobot360 logo" className="w-8 h-8 rounded-lg object-cover" />
             <span className="font-bold text-xl tracking-tight text-white">Autobot360</span>
-          </div>
+            </div>
+          </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-white/60">
             <Link href="/about"><span className="hover:text-white transition-colors cursor-pointer">About</span></Link>
             <Link href="/contact"><span className="hover:text-white transition-colors cursor-pointer">Contact</span></Link>
@@ -30,10 +32,12 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
       <footer className="border-t border-white/8 px-6 md:px-10 py-14" style={{ background: "#050505" }}>
         <div className="max-w-7xl mx-auto grid gap-10 md:grid-cols-4">
           <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
+            <Link href="/">
+              <div className="flex items-center gap-2.5 cursor-pointer">
               <img src={logoImage} alt="Autobot360 logo" className="w-7 h-7 rounded-lg object-cover" />
               <span className="font-bold text-white">Autobot360</span>
-            </div>
+              </div>
+            </Link>
             <p className="text-sm leading-relaxed text-white/40 max-w-xs">Capture decisions, connect your tools, and build a living second brain for your company.</p>
           </div>
           <div>
