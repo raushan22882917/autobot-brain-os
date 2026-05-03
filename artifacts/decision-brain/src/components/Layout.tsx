@@ -84,10 +84,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
-        {NAV_SECTIONS.map((section) => (
+      <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-1">
+        {NAV_SECTIONS.map((section, si) => (
           <div key={section.label}>
-            <p className="text-[9px] font-bold tracking-[0.2em] uppercase px-3 mb-2" style={{ color: "#2a2a2a" }}>
+            <p className={cn(
+              "text-[9px] font-bold tracking-[0.2em] uppercase px-3 mb-1",
+              si > 0 ? "pt-3" : "pt-1"
+            )} style={{ color: "#383838" }}>
               {section.label}
             </p>
             <div className="space-y-0.5">
@@ -96,7 +99,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 return (
                   <Link key={item.href} href={item.href} onClick={() => setIsMobileOpen(false)}>
                     <div className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all group relative",
+                      "flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer transition-all group relative",
                       isActive ? "text-white" : "text-white/35 hover:text-white/70"
                     )}
                       style={isActive ? {
