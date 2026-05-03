@@ -318,9 +318,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto grid gap-10 md:grid-cols-4">
           <div className="space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "#DC2626" }}>
-                <BrainCircuit className="w-4 h-4 text-white" />
-              </div>
+              <img src={logoImage} alt="Autobot360 logo" className="w-7 h-7 rounded-lg object-cover" />
               <span className="font-bold text-white">Autobot360</span>
             </div>
             <p className="text-sm leading-relaxed text-white/40 max-w-xs">
