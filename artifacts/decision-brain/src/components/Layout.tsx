@@ -72,6 +72,8 @@ const NAV_SECTIONS = [
   },
 ];
 
+const ADMIN_EMAILS = ["admin@autobot360.com", "founder@autobot360.com"];
+
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const { user } = useUser();
@@ -84,8 +86,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   const handleSignOut = () => signOut({ redirectUrl: "/" });
 
-  const ADMIN_EMAILS = ["admin@autobot360.com", "founder@autobot360.com"];
   const isAdmin = ADMIN_EMAILS.includes(user?.primaryEmailAddress?.emailAddress || "");
+  const role = isAdmin ? "Admin" : "Member";
 
   const now = new Date();
   const dateStr = now.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
@@ -173,6 +175,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex-1 min-w-0">
             <p className="text-[12px] font-semibold text-white truncate">{user?.fullName || "Executive"}</p>
             <p className="text-[10px] truncate" style={{ color: "#444" }}>{user?.primaryEmailAddress?.emailAddress}</p>
+            <div className="mt-1 inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] border"
+              style={{ background: isAdmin ? "rgba(220,38,38,0.12)" : "rgba(255,255,255,0.04)", color: isAdmin ? "#f87171" : "#9ca3af", borderColor: isAdmin ? "rgba(220,38,38,0.2)" : "#222" }}>
+              {role}
+            </div>
           </div>
         </div>
         <div className="flex gap-1.5">
