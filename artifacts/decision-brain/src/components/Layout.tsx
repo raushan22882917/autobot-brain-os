@@ -76,7 +76,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const { data: alerts } = useListAlerts({ unread: true }, { query: { enabled: !!user } });
-  const unreadCount = alerts?.filter((a: any) => a.isRead === false)?.length || 0;
+  const alertsArray = Array.isArray(alerts) ? alerts : [];
+  const unreadCount = alertsArray.filter((a: any) => a.isRead === false).length || 0;
 
   const handleSignOut = () => signOut({ redirectUrl: "/" });
 

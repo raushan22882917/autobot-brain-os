@@ -108,7 +108,7 @@ export default function Dashboard() {
 
   if (!analytics) return null;
 
-  const stakesData = Object.entries(analytics.decisionsByStakes)
+  const stakesData = Object.entries(analytics.decisionsByStakes && typeof analytics.decisionsByStakes === 'object' ? analytics.decisionsByStakes : {})
     .map(([name, value]) => ({ name, value }))
     .filter(d => d.value > 0);
 
