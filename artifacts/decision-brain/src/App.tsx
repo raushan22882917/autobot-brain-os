@@ -25,6 +25,8 @@ import Chat from "@/pages/Chat";
 import Settings from "@/pages/Settings";
 import Pricing from "@/pages/Pricing";
 import JiraBoard from "@/pages/JiraBoard";
+import Analytics from "@/pages/Analytics";
+import LiveFeed from "@/pages/LiveFeed";
 import NotFound from "@/pages/not-found";
 
 const clerkPubKey = publishableKeyFromHost(
@@ -207,6 +209,8 @@ export default function App() {
               <ProtectedRoute path="/settings" component={Settings} />
               <ProtectedRoute path="/pricing" component={Pricing} />
               <ProtectedRoute path="/jira" component={JiraBoard} />
+              <ProtectedRoute path="/analytics" component={Analytics} />
+              <ProtectedRoute path="/feed" component={LiveFeed} />
               
               <Route component={NotFound} />
             </Switch>

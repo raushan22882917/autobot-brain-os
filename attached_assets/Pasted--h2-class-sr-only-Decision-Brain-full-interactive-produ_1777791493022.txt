@@ -1,0 +1,660 @@
+
+
+<h2 class="sr-only">Decision Brain — full interactive product mockup with 12 connected pages including dashboard, decision log, patterns, blind spots, AI chat, integrations, and more.</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{display:flex;height:720px;overflow:hidden;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);background:var(--color-background-tertiary)}
+.sb{width:188px;flex-shrink:0;background:var(--color-background-primary);border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column}
+.sb-top{padding:14px 14px 10px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.logo{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.logo-icon{width:24px;height:24px;background:#3C3489;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-nav{flex:1;padding:10px 0;overflow-y:auto}
+.nl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.07em;text-transform:uppercase;padding:8px 14px 4px}
+.ni{display:flex;align-items:center;gap:8px;padding:6px 14px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;border-left:2px solid transparent;transition:all .12s}
+.ni:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.ni.on{color:var(--color-text-primary);font-weight:500;border-left:2px solid #534AB7;background:var(--color-background-secondary)}
+.ni-icon{font-size:13px;width:16px;text-align:center;flex-shrink:0}
+.ni-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sb-bot{padding:10px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.av{width:28px;height:28px;border-radius:50%;background:#CECBF6;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#3C3489}
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.topbar{padding:10px 18px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between;background:var(--color-background-primary);flex-shrink:0}
+.pg-title{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.pg-sub{font-size:11px;color:var(--color-text-tertiary);margin-top:1px}
+.tb-actions{display:flex;gap:6px;align-items:center}
+.btn{font-size:11px;padding:5px 10px;border-radius:5px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer}
+.btn-p{background:#534AB7;border-color:#534AB7;color:#fff}
+.content{padding:16px 18px;flex:1}
+.page{display:none}
+.page.on{display:block}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.mc{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px}
+.mc-l{font-size:10px;color:var(--color-text-tertiary);margin-bottom:3px}
+.mc-v{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.mc-s{font-size:10px;margin-top:2px}
+.up{color:#3B6D11}.dn{color:#A32D2D}.neu{color:var(--color-text-tertiary)}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:13px 15px;margin-bottom:12px}
+.card-t{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.row:last-child{border-bottom:none}
+.badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:500;white-space:nowrap;flex-shrink:0}
+.bh{background:#EEEDFE;color:#3C3489}.bm{background:#FAEEDA;color:#633806}.bl{background:#EAF3DE;color:#27500A}.bc{background:#FCEBEB;color:#791F1F}.bg{background:#EAF3DE;color:#27500A}
+.tag{font-size:10px;padding:2px 6px;border-radius:4px;background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.ai-pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 7px;border-radius:8px;background:#EEEDFE;color:#534AB7;font-weight:500;margin-top:4px}
+.pulse{width:5px;height:5px;border-radius:50%;background:#534AB7;animation:pu 1.8s infinite}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.2}}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#639922;animation:pu 1.5s infinite;display:inline-block;margin-right:4px}
+.sec-t{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.pbar-w{height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;flex:1}
+.pbar{height:100%;border-radius:3px}
+.pg{background:#639922}.pa{background:#EF9F27}.pr{background:#E24B4A}.pp{background:#534AB7}
+.chat-msg{padding:8px 11px;border-radius:var(--border-radius-md);margin-bottom:8px;font-size:12px;line-height:1.5;max-width:88%}
+.cm-ai{background:var(--color-background-secondary);color:var(--color-text-primary);align-self:flex-start;border:0.5px solid var(--color-border-tertiary)}
+.cm-u{background:#534AB7;color:#fff;align-self:flex-end;margin-left:auto}
+.chat-wrap{display:flex;flex-direction:column;min-height:300px}
+.inp{width:100%;padding:7px 10px;border-radius:6px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary);font-size:12px}
+.p-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.conn-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.p-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px;cursor:pointer;transition:border-color .12s}
+.p-card:hover{border-color:var(--color-border-secondary)}
+.p-card.ok{border-color:#9FE1CB}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:12px 0}
+.tbl{width:100%;font-size:12px;border-collapse:collapse}
+.tbl th{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;padding:6px 8px;text-align:left;border-bottom:0.5px solid var(--color-border-tertiary)}
+.tbl td{padding:8px 8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--color-background-secondary)}
+.tbl td.muted{color:var(--color-text-secondary)}
+.alert-icon{width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.ai-warn{background:#FAEEDA}.ai-match{background:#EEEDFE}.ai-risk{background:#FCEBEB}
+.pat-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:13px;cursor:pointer}
+.pat-card:hover{border-color:var(--color-border-secondary)}
+.strength{display:flex;align-items:center;gap:6px;margin-top:8px}
+.str-bar{flex:1;height:4px;background:var(--color-background-secondary);border-radius:2px;overflow:hidden}
+.str-fill{height:100%;border-radius:2px;background:#534AB7}
+.timeline-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.td-p{background:#534AB7}.td-g{background:#639922}.td-a{background:#EF9F27}.td-r{background:#E24B4A}
+.ver-line{width:1px;background:var(--color-border-tertiary);margin-left:4px;flex-shrink:0}
+.report-sec{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:11px;margin-bottom:10px}
+.report-sec-t{font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px}
+.toggle{width:32px;height:18px;border-radius:9px;background:#534AB7;position:relative;cursor:pointer;flex-shrink:0}
+.toggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;right:2px;top:2px;transition:right .15s}
+.toggle.off{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary)}
+.toggle.off::after{right:16px}
+.blind-map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.bm-cell{border-radius:var(--border-radius-md);padding:10px;cursor:pointer}
+.bm-cell:hover{opacity:.85}
+.bm-l{font-size:10px;font-weight:500;margin-bottom:2px}
+.bm-v{font-size:16px;font-weight:500}
+.feed-item{display:flex;gap:9px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);align-items:flex-start}
+.feed-item:last-child{border-bottom:none}
+.feed-src{width:24px;height:24px;border-radius:5px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.mini-chart{display:flex;align-items:flex-end;gap:3px;height:40px}
+.bar-item{flex:1;border-radius:2px 2px 0 0;min-width:6px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:3px 7px;border-radius:8px;background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary);cursor:pointer}
+.chip.active{background:#EEEDFE;color:#534AB7;border-color:#AFA9EC}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+</style>
+
+<div class="app">
+<div class="sb">
+  <div class="sb-top">
+    <div class="logo">
+      <div class="logo-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2.5" fill="#AFA9EC"/><path d="M7 2v1.5M7 10.5V12M2 7h1.5M10.5 7H12M3.5 3.5l1 1M9.5 9.5l1 1M9.5 4.5l-1 1M4.5 9.5l-1 1" stroke="#AFA9EC" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+      Decision Brain
+    </div>
+  </div>
+  <div class="sb-nav">
+    <div class="nl">Main</div>
+    <div class="ni on" onclick="go('dashboard')"><span class="ni-icon">◈</span>Dashboard</div>
+    <div class="ni" onclick="go('log')"><span class="ni-icon">≡</span>Decision Log</div>
+    <div class="ni" onclick="go('patterns')"><span class="ni-icon">⊛</span>Patterns</div>
+    <div class="ni" onclick="go('outcomes')"><span class="ni-icon">◎</span>Outcomes</div>
+    <div class="nl">Intelligence</div>
+    <div class="ni" onclick="go('blindspots')"><span class="ni-icon">◉</span>Blind Spots</div>
+    <div class="ni" onclick="go('chat')"><span class="ni-icon">◇</span>AI Chat</div>
+    <div class="ni" onclick="go('reports')"><span class="ni-icon">▤</span>Reports</div>
+    <div class="ni" onclick="go('feed')"><span class="ni-icon">●</span>Live Feed</div>
+    <div class="nl">System</div>
+    <div class="ni" onclick="go('integrations')"><span class="ni-icon">⊞</span>Integrations</div>
+    <div class="ni" onclick="go('analytics')"><span class="ni-icon">▦</span>Analytics</div>
+    <div class="ni" onclick="go('settings')"><span class="ni-icon">◫</span>Settings</div>
+  </div>
+  <div class="sb-bot">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="av">RT</div>
+      <div><div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Ratan Tata</div><div style="font-size:10px;color:var(--color-text-tertiary)">Enterprise plan</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+<div class="topbar" id="topbar">
+  <div><div class="pg-title" id="pg-title">Dashboard</div><div class="pg-sub" id="pg-sub">Good morning, Ratan — 3 alerts need your attention</div></div>
+  <div class="tb-actions">
+    <button class="btn" onclick="go('feed')"><span class="live-dot"></span>Live capture</button>
+    <button class="btn btn-p" onclick="go('log')">+ Log decision</button>
+  </div>
+</div>
+<div class="content" id="content">
+
+<!-- PAGE: DASHBOARD -->
+<div class="page on" id="p-dashboard">
+  <div class="grid4">
+    <div class="mc"><div class="mc-l">Decisions logged</div><div class="mc-v">847</div><div class="mc-s up">+23 this week</div></div>
+    <div class="mc"><div class="mc-l">Pattern matches</div><div class="mc-v">34</div><div class="mc-s neu">last 30 days</div></div>
+    <div class="mc"><div class="mc-l">Outcome score</div><div class="mc-v">78%</div><div class="mc-s up">+5% vs last qtr</div></div>
+    <div class="mc"><div class="mc-l">Blind spot alerts</div><div class="mc-v">3</div><div class="mc-s dn">needs review</div></div>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="card">
+        <div class="card-t">Recent decisions</div>
+        <div class="row"><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);cursor:pointer" onclick="go('detail')">Acquire Jaguar Land Rover</div><div class="tags"><span class="tag">M&A</span><span class="tag">Auto</span><span class="tag">£2.3B</span></div><div class="ai-pill"><div class="pulse"></div>3 similar past decisions</div></div><span class="badge bh">High</span></div>
+        <div class="row"><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Promote Cyrus Mistry to MD</div><div style="font-size:10px;color:var(--color-text-tertiary);margin-top:2px">Calendar — 5 days ago</div><div class="tags"><span class="tag">Leadership</span><span class="tag">Succession</span></div></div><span class="badge bh">High</span></div>
+        <div class="row"><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Expand Nano production line</div><div style="font-size:10px;color:var(--color-text-tertiary);margin-top:2px">Slack — 1 week ago</div><div class="tags"><span class="tag">Product</span><span class="tag">CapEx</span></div></div><span class="badge bm">Medium</span></div>
+        <div class="row"><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Defer Singapore office expansion</div><div style="font-size:10px;color:var(--color-text-tertiary);margin-top:2px">Gmail — 2 weeks ago</div><div class="tags"><span class="tag">Real estate</span><span class="tag">Q3</span></div></div><span class="badge bl">Low</span></div>
+      </div>
+      <div class="card">
+        <div class="card-t">Outcome tracker — 90 day</div>
+        <div class="row"><div style="flex:1;font-size:12px;color:var(--color-text-primary)">TCS IPO (2004)</div><div class="pbar-w"><div class="pbar pg" style="width:94%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:28px;text-align:right">94%</div></div>
+        <div class="row"><div style="flex:1;font-size:12px;color:var(--color-text-primary)">Corus Steel acquisition</div><div class="pbar-w"><div class="pbar pa" style="width:61%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:28px;text-align:right">61%</div></div>
+        <div class="row"><div style="flex:1;font-size:12px;color:var(--color-text-primary)">Nano pricing strategy</div><div class="pbar-w"><div class="pbar pr" style="width:38%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:28px;text-align:right">38%</div></div>
+        <div class="row"><div style="flex:1;font-size:12px;color:var(--color-text-primary)">Taj Hotels expansion</div><div class="pbar-w"><div class="pbar pg" style="width:82%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:28px;text-align:right">82%</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-t">AI alerts</div>
+        <div class="row"><div class="alert-icon ai-warn" style="font-size:12px">⚠</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px">Similar acquisition failed in 2001</div><div style="font-size:11px;color:var(--color-text-secondary)">JLR deal matches Daewoo Motors bid — 89% similarity</div></div></div>
+        <div class="row"><div class="alert-icon ai-match" style="font-size:12px">◈</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px">Leadership succession pattern</div><div style="font-size:11px;color:var(--color-text-secondary)">6 similar promotion decisions found. Avg outcome: 74%</div></div></div>
+        <div class="row"><div class="alert-icon ai-risk" style="font-size:12px">!</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px">Blind spot: rural market assumptions</div><div style="font-size:11px;color:var(--color-text-secondary)">Nano pricing lacks third-party data. You were here in 2004.</div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-t">Decision velocity — last 12 weeks</div>
+        <div class="mini-chart" style="padding:0 0 4px">
+          <div class="bar-item" style="height:40%;background:#AFA9EC"></div>
+          <div class="bar-item" style="height:55%;background:#AFA9EC"></div>
+          <div class="bar-item" style="height:35%;background:#AFA9EC"></div>
+          <div class="bar-item" style="height:70%;background:#AFA9EC"></div>
+          <div class="bar-item" style="height:50%;background:#AFA9EC"></div>
+          <div class="bar-item" style="height:85%;background:#534AB7"></div>
+          <div class="bar-item" style="height:60%;background:#534AB7"></div>
+          <div class="bar-item" style="height:75%;background:#534AB7"></div>
+          <div class="bar-item" style="height:90%;background:#534AB7"></div>
+          <div class="bar-item" style="height:65%;background:#534AB7"></div>
+          <div class="bar-item" style="height:80%;background:#534AB7"></div>
+          <div class="bar-item" style="height:100%;background:#534AB7"></div>
+        </div>
+        <div style="font-size:10px;color:var(--color-text-tertiary)">Week 7–12 showing +38% decision frequency</div>
+        <div class="divider"></div>
+        <div class="card-t" style="margin-top:4px">Platform capture split</div>
+        <div class="row"><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Google Meet</div><div class="pbar-w" style="max-width:80px"><div class="pbar pp" style="width:42%"></div></div><div style="font-size:10px;color:var(--color-text-tertiary);width:28px;text-align:right">42%</div></div>
+        <div class="row"><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Gmail</div><div class="pbar-w" style="max-width:80px"><div class="pbar pp" style="width:30%"></div></div><div style="font-size:10px;color:var(--color-text-tertiary);width:28px;text-align:right">30%</div></div>
+        <div class="row"><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Slack</div><div class="pbar-w" style="max-width:80px"><div class="pbar pp" style="width:18%"></div></div><div style="font-size:10px;color:var(--color-text-tertiary);width:28px;text-align:right">18%</div></div>
+        <div class="row"><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Manual</div><div class="pbar-w" style="max-width:80px"><div class="pbar pp" style="width:10%"></div></div><div style="font-size:10px;color:var(--color-text-tertiary);width:28px;text-align:right">10%</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: DECISION LOG -->
+<div class="page" id="p-log">
+  <div class="chips">
+    <div class="chip active">All (847)</div>
+    <div class="chip">Critical (12)</div>
+    <div class="chip">High (89)</div>
+    <div class="chip">M&A (43)</div>
+    <div class="chip">Leadership (67)</div>
+    <div class="chip">Product (112)</div>
+    <div class="chip">Finance (98)</div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="tbl">
+      <thead><tr><th style="width:36%">Decision</th><th>Stakes</th><th>Platform</th><th>Date</th><th>Outcome</th><th>Alerts</th></tr></thead>
+      <tbody>
+        <tr onclick="go('detail')" style="cursor:pointer"><td><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Acquire Jaguar Land Rover</div><div style="font-size:10px;color:var(--color-text-tertiary)">M&A · Auto · £2.3B</div></td><td><span class="badge bh">High</span></td><td class="muted">Google Meet</td><td class="muted">2 days ago</td><td><div class="pbar-w" style="max-width:50px"><div class="pbar pa" style="width:61%"></div></div></td><td><span class="badge bc">3 alerts</span></td></tr>
+        <tr style="cursor:pointer"><td><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Promote Cyrus Mistry to MD</div><div style="font-size:10px;color:var(--color-text-tertiary)">Leadership · Succession</div></td><td><span class="badge bh">High</span></td><td class="muted">Calendar</td><td class="muted">5 days ago</td><td><div class="pbar-w" style="max-width:50px"><div class="pbar pg" style="width:74%"></div></div></td><td><span class="badge bm">1 alert</span></td></tr>
+        <tr style="cursor:pointer"><td><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Expand Nano production line</div><div style="font-size:10px;color:var(--color-text-tertiary)">Product · CapEx</div></td><td><span class="badge bm">Medium</span></td><td class="muted">Slack</td><td class="muted">1 week ago</td><td><div class="pbar-w" style="max-width:50px"><div class="pbar pr" style="width:38%"></div></div></td><td><span class="badge bc">2 alerts</span></td></tr>
+        <tr style="cursor:pointer"><td><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Defer Singapore office expansion</div><div style="font-size:10px;color:var(--color-text-tertiary)">Real estate · Q3</div></td><td><span class="badge bl">Low</span></td><td class="muted">Gmail</td><td class="muted">2 weeks ago</td><td><div class="pbar-w" style="max-width:50px"><div class="pbar pg" style="width:80%"></div></div></td><td><span class="badge" style="background:var(--color-background-secondary);color:var(--color-text-tertiary)">None</span></td></tr>
+        <tr style="cursor:pointer"><td><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">TCS public listing — NSE + BSE</div><div style="font-size:10px;color:var(--color-text-tertiary)">Finance · IPO · ₹47,000Cr</div></td><td><span class="badge bc">Critical</span></td><td class="muted">Manual</td><td class="muted">Mar 2024</td><td><div class="pbar-w" style="max-width:50px"><div class="pbar pg" style="width:94%"></div></div></td><td><span class="badge bg">Resolved</span></td></tr>
+        <tr style="cursor:pointer"><td><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Launch Tata Nexon EV</div><div style="font-size:10px;color:var(--color-text-tertiary)">Product · EV · ₹1,200Cr</div></td><td><span class="badge bh">High</span></td><td class="muted">Zoom</td><td class="muted">Jan 2024</td><td><div class="pbar-w" style="max-width:50px"><div class="pbar pg" style="width:88%"></div></div></td><td><span class="badge bg">Resolved</span></td></tr>
+        <tr style="cursor:pointer"><td><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Divest Tata Steel Europe</div><div style="font-size:10px;color:var(--color-text-tertiary)">M&A · Steel · Restructuring</div></td><td><span class="badge bc">Critical</span></td><td class="muted">Teams</td><td class="muted">Nov 2023</td><td><div class="pbar-w" style="max-width:50px"><div class="pbar pa" style="width:55%"></div></div></td><td><span class="badge bm">1 alert</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PAGE: DECISION DETAIL -->
+<div class="page" id="p-detail">
+  <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px">
+    <button class="btn" onclick="go('log')" style="font-size:11px">← Back</button>
+    <div><div style="font-size:15px;font-weight:500;color:var(--color-text-primary)">Acquire Jaguar Land Rover</div><div style="font-size:11px;color:var(--color-text-tertiary)">Logged via Google Meet · 2 days ago · <span class="badge bh">High stakes</span></div></div>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="card">
+        <div class="card-t">Decision context</div>
+        <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.6">Gemini extracted this decision from a 2hr 14min board call on May 1. The board discussed acquiring Ford's luxury division JLR for £2.3 billion. Key drivers cited: global brand recognition, UK manufacturing footprint, and turnaround opportunity.</div>
+        <div class="tags" style="margin-top:10px"><span class="tag">M&A</span><span class="tag">Auto</span><span class="tag">£2.3B</span><span class="tag">UK</span><span class="tag">Board decision</span></div>
+        <div class="divider"></div>
+        <div class="card-t">Alternatives considered</div>
+        <div class="row"><div class="timeline-dot td-a"></div><div style="flex:1;font-size:11px;color:var(--color-text-secondary)"><strong style="color:var(--color-text-primary)">Partial stake acquisition (25%)</strong> — Rejected due to limited operational control</div></div>
+        <div class="row"><div class="timeline-dot td-r"></div><div style="flex:1;font-size:11px;color:var(--color-text-secondary)"><strong style="color:var(--color-text-primary)">License agreement only</strong> — Rejected: insufficient long-term value</div></div>
+        <div class="row"><div class="timeline-dot td-g"></div><div style="flex:1;font-size:11px;color:var(--color-text-secondary)"><strong style="color:var(--color-text-primary)">Full acquisition (chosen)</strong> — Approved unanimously at £2.3B</div></div>
+      </div>
+      <div class="card">
+        <div class="card-t">Outcome — 90 days</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          <div style="font-size:28px;font-weight:500;color:var(--color-text-primary)">61%</div>
+          <div><div style="font-size:11px;color:var(--color-text-secondary)">Integration challenges delayed expected synergies</div><div style="font-size:10px;color:var(--color-text-tertiary);margin-top:2px">Next check-in: 180 days (Oct 31, 2024)</div></div>
+        </div>
+        <div class="pbar-w" style="margin-bottom:6px"><div class="pbar pa" style="width:61%"></div></div>
+        <button class="btn" style="font-size:11px;width:100%">Update outcome score</button>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-t">Gemini AI analysis</div>
+        <div class="row"><div class="alert-icon ai-warn">⚠</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px">Pattern match — Daewoo Motors bid (2001)</div><div style="font-size:11px;color:var(--color-text-secondary)">89% contextual similarity. Outcome was negative (-40%). Key risk: overestimated post-acquisition integration speed.</div></div></div>
+        <div class="row"><div class="alert-icon ai-match">◈</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px">Successful pattern — Tetley Tea (2000)</div><div style="font-size:11px;color:var(--color-text-secondary)">72% similarity. Outcome was positive (+85%). Cross-border luxury brand acquisition success factor identified.</div></div></div>
+        <div class="row"><div class="alert-icon ai-risk">!</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px">Blind spot — external expert input missing</div><div style="font-size:11px;color:var(--color-text-secondary)">No independent automotive analyst referenced in board call. 3 of 4 past negative M&A decisions share this trait.</div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-t">3 most similar past decisions</div>
+        <div class="row"><div class="timeline-dot td-r" style="margin-top:4px"></div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Daewoo Motors bid (2001)</div><div style="font-size:10px;color:var(--color-text-tertiary)">Similarity: 89% · Outcome: 22%</div></div></div>
+        <div class="row"><div class="timeline-dot td-g" style="margin-top:4px"></div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Tetley Tea acquisition (2000)</div><div style="font-size:10px;color:var(--color-text-tertiary)">Similarity: 72% · Outcome: 85%</div></div></div>
+        <div class="row"><div class="timeline-dot td-a" style="margin-top:4px"></div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Corus Steel (2007)</div><div style="font-size:10px;color:var(--color-text-tertiary)">Similarity: 61% · Outcome: 61%</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: PATTERNS -->
+<div class="page" id="p-patterns">
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-t">Pattern summary — last 2 years</div>
+    <div style="display:flex;gap:20px">
+      <div class="mc" style="flex:1"><div class="mc-l">Patterns detected</div><div class="mc-v">34</div><div class="mc-s up">+8 this month</div></div>
+      <div class="mc" style="flex:1"><div class="mc-l">Repeat mistakes</div><div class="mc-v">7</div><div class="mc-s dn">action needed</div></div>
+      <div class="mc" style="flex:1"><div class="mc-l">Successful patterns</div><div class="mc-v">19</div><div class="mc-s up">reinforced</div></div>
+      <div class="mc" style="flex:1"><div class="mc-l">Avg similarity score</div><div class="mc-v">76%</div><div class="mc-s neu">stable</div></div>
+    </div>
+  </div>
+  <div class="conn-grid">
+    <div class="pat-card" onclick="go('detail')">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="badge bc">Repeat mistake</span><span style="font-size:10px;color:var(--color-text-tertiary)">7 instances</span></div>
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Cross-border M&A without independent expert</div>
+      <div style="font-size:11px;color:var(--color-text-secondary)">Pattern: major acquisitions made without external analyst input. Avg outcome 34%.</div>
+      <div class="strength"><div style="font-size:10px;color:var(--color-text-tertiary);width:40px">89%</div><div class="str-bar"><div class="str-fill" style="width:89%;background:#E24B4A"></div></div></div>
+    </div>
+    <div class="pat-card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="badge bg">Success pattern</span><span style="font-size:10px;color:var(--color-text-tertiary)">11 instances</span></div>
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Tech sector CapEx — early mover advantage</div>
+      <div style="font-size:11px;color:var(--color-text-secondary)">Decisions to invest early in emerging tech before competitors. Avg outcome 87%.</div>
+      <div class="strength"><div style="font-size:10px;color:var(--color-text-tertiary);width:40px">87%</div><div class="str-bar"><div class="str-fill" style="width:87%;background:#639922"></div></div></div>
+    </div>
+    <div class="pat-card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="badge bm">Caution</span><span style="font-size:10px;color:var(--color-text-tertiary)">4 instances</span></div>
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Urgency-driven pricing decisions</div>
+      <div style="font-size:11px;color:var(--color-text-secondary)">Pricing made under time pressure (Nano, etc). Avg outcome 41%. Missing rural data.</div>
+      <div class="strength"><div style="font-size:10px;color:var(--color-text-tertiary);width:40px">74%</div><div class="str-bar"><div class="str-fill" style="width:74%;background:#EF9F27"></div></div></div>
+    </div>
+    <div class="pat-card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="badge bg">Success pattern</span><span style="font-size:10px;color:var(--color-text-tertiary)">8 instances</span></div>
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Internal succession with mentorship runway</div>
+      <div style="font-size:11px;color:var(--color-text-secondary)">Promotions with 6+ month handover period. Avg outcome 82%. Strong indicator.</div>
+      <div class="strength"><div style="font-size:10px;color:var(--color-text-tertiary);width:40px">82%</div><div class="str-bar"><div class="str-fill" style="width:82%;background:#639922"></div></div></div>
+    </div>
+    <div class="pat-card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="badge bc">Repeat mistake</span><span style="font-size:10px;color:var(--color-text-tertiary)">3 instances</span></div>
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Consumer market assumption without research</div>
+      <div style="font-size:11px;color:var(--color-text-secondary)">Decisions assuming mass-market pricing adoption. Avg outcome 29%. High risk.</div>
+      <div class="strength"><div style="font-size:10px;color:var(--color-text-tertiary);width:40px">81%</div><div class="str-bar"><div class="str-fill" style="width:81%;background:#E24B4A"></div></div></div>
+    </div>
+    <div class="pat-card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="badge bm">Emerging</span><span style="font-size:10px;color:var(--color-text-tertiary)">2 instances</span></div>
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">ESG-aligned strategic pivot</div>
+      <div style="font-size:11px;color:var(--color-text-secondary)">New pattern forming — ESG commitment decisions showing 91% early outcome. Watch.</div>
+      <div class="strength"><div style="font-size:10px;color:var(--color-text-tertiary);width:40px">91%</div><div class="str-bar"><div class="str-fill" style="width:91%;background:#534AB7"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: OUTCOMES -->
+<div class="page" id="p-outcomes">
+  <div class="grid4" style="margin-bottom:14px">
+    <div class="mc"><div class="mc-l">Avg outcome score</div><div class="mc-v">72%</div><div class="mc-s up">+4pts this qtr</div></div>
+    <div class="mc"><div class="mc-l">Pending reviews</div><div class="mc-v">11</div><div class="mc-s dn">overdue: 3</div></div>
+    <div class="mc"><div class="mc-l">30-day check-ins</div><div class="mc-v">4</div><div class="mc-s neu">due this week</div></div>
+    <div class="mc"><div class="mc-l">Win rate (high stakes)</div><div class="mc-v">68%</div><div class="mc-s up">up from 61%</div></div>
+  </div>
+  <div class="card">
+    <div class="card-t">Pending outcome reviews</div>
+    <table class="tbl">
+      <thead><tr><th>Decision</th><th>Stakes</th><th>Due</th><th>Days overdue</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Acquire Jaguar Land Rover</div></td><td><span class="badge bh">High</span></td><td class="muted">90 days</td><td><span style="color:#A32D2D;font-size:12px">+12 days</span></td><td><button class="btn btn-p" style="font-size:10px;padding:3px 8px">Score now</button></td></tr>
+        <tr><td><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Nano production expansion</div></td><td><span class="badge bm">Medium</span></td><td class="muted">30 days</td><td><span style="color:#A32D2D;font-size:12px">+3 days</span></td><td><button class="btn btn-p" style="font-size:10px;padding:3px 8px">Score now</button></td></tr>
+        <tr><td><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Cyrus Mistry promotion</div></td><td><span class="badge bh">High</span></td><td class="muted">30 days</td><td><span style="color:#BA7517;font-size:12px">Due today</span></td><td><button class="btn btn-p" style="font-size:10px;padding:3px 8px">Score now</button></td></tr>
+        <tr><td><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Singapore office deferral</div></td><td><span class="badge bl">Low</span></td><td class="muted">180 days</td><td><span style="color:var(--color-text-tertiary);font-size:12px">+28 days</span></td><td><button class="btn" style="font-size:10px;padding:3px 8px">Score now</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-t">Outcome score history — by category</div>
+    <div class="row"><div style="width:80px;font-size:11px;color:var(--color-text-secondary)">M&A</div><div class="pbar-w"><div class="pbar pa" style="width:58%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:32px;text-align:right">58%</div></div>
+    <div class="row"><div style="width:80px;font-size:11px;color:var(--color-text-secondary)">Leadership</div><div class="pbar-w"><div class="pbar pg" style="width:82%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:32px;text-align:right">82%</div></div>
+    <div class="row"><div style="width:80px;font-size:11px;color:var(--color-text-secondary)">Product</div><div class="pbar-w"><div class="pbar pp" style="width:74%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:32px;text-align:right">74%</div></div>
+    <div class="row"><div style="width:80px;font-size:11px;color:var(--color-text-secondary)">Finance</div><div class="pbar-w"><div class="pbar pg" style="width:88%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:32px;text-align:right">88%</div></div>
+    <div class="row"><div style="width:80px;font-size:11px;color:var(--color-text-secondary)">Real estate</div><div class="pbar-w"><div class="pbar pa" style="width:63%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:32px;text-align:right">63%</div></div>
+  </div>
+</div>
+
+<!-- PAGE: BLIND SPOTS -->
+<div class="page" id="p-blindspots">
+  <div class="card" style="margin-bottom:12px"><div style="font-size:12px;color:var(--color-text-secondary);line-height:1.6">Gemini has analyzed 847 decisions and identified recurring blind spots — areas where missing context, bias, or skipped steps have contributed to lower outcome scores.</div></div>
+  <div class="blind-map">
+    <div class="bm-cell" style="background:#FCEBEB"><div class="bm-l" style="color:#791F1F">External validation</div><div class="bm-v" style="color:#A32D2D">7 times</div><div style="font-size:10px;color:#A32D2D;margin-top:2px">Avg outcome: 34%</div></div>
+    <div class="bm-cell" style="background:#FAEEDA"><div class="bm-l" style="color:#633806">Market research</div><div class="bm-v" style="color:#BA7517">5 times</div><div style="font-size:10px;color:#BA7517;margin-top:2px">Avg outcome: 41%</div></div>
+    <div class="bm-cell" style="background:#FAEEDA"><div class="bm-l" style="color:#633806">Urgency bias</div><div class="bm-v" style="color:#BA7517">4 times</div><div style="font-size:10px;color:#BA7517;margin-top:2px">Avg outcome: 45%</div></div>
+    <div class="bm-cell" style="background:#EAF3DE"><div class="bm-l" style="color:#27500A">Confirmation bias</div><div class="bm-v" style="color:#3B6D11">2 times</div><div style="font-size:10px;color:#3B6D11;margin-top:2px">Avg outcome: 62%</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-t">Top blind spot: missing external validation</div>
+      <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:10px">In 7 of your major acquisition decisions, no independent third-party expert was consulted before the decision. All 7 have outcome scores below 50%.</div>
+      <div class="row"><div class="timeline-dot td-r" style="margin-top:4px"></div><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Daewoo Motors (2001) — Outcome: 22%</div></div>
+      <div class="row"><div class="timeline-dot td-r" style="margin-top:4px"></div><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Nano pricing strategy (2008) — Outcome: 38%</div></div>
+      <div class="row"><div class="timeline-dot td-a" style="margin-top:4px"></div><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">JLR integration plan (current) — Outcome: 61%</div></div>
+      <button class="btn btn-p" style="font-size:11px;margin-top:10px;width:100%" onclick="go('chat')">Ask AI how to fix this ↗</button>
+    </div>
+    <div class="card">
+      <div class="card-t">Blind spot trend — last 3 years</div>
+      <div class="mini-chart" style="padding:0 0 4px;margin-bottom:8px">
+        <div class="bar-item" style="height:80%;background:#F09595"></div>
+        <div class="bar-item" style="height:70%;background:#F09595"></div>
+        <div class="bar-item" style="height:90%;background:#F09595"></div>
+        <div class="bar-item" style="height:60%;background:#FAC775"></div>
+        <div class="bar-item" style="height:75%;background:#FAC775"></div>
+        <div class="bar-item" style="height:50%;background:#FAC775"></div>
+        <div class="bar-item" style="height:40%;background:#C0DD97"></div>
+        <div class="bar-item" style="height:35%;background:#C0DD97"></div>
+        <div class="bar-item" style="height:45%;background:#C0DD97"></div>
+        <div class="bar-item" style="height:30%;background:#9FE1CB"></div>
+        <div class="bar-item" style="height:25%;background:#9FE1CB"></div>
+        <div class="bar-item" style="height:20%;background:#5DCAA5"></div>
+      </div>
+      <div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:10px">Blind spots are decreasing — down 65% since AI monitoring started</div>
+      <div class="card-t">Gemini recommendations</div>
+      <div class="row"><div class="ai-pill" style="margin:0"><div class="pulse"></div>Always add external analyst to M&A checklist</div></div>
+      <div class="row"><div class="ai-pill" style="margin:0"><div class="pulse"></div>Flag urgency-framed decisions for 24hr delay</div></div>
+      <div class="row"><div class="ai-pill" style="margin:0"><div class="pulse"></div>Require rural market data for consumer pricing</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: AI CHAT -->
+<div class="page" id="p-chat">
+  <div class="grid2" style="height:100%">
+    <div>
+      <div class="card" style="height:480px;display:flex;flex-direction:column">
+        <div class="card-t">Decision intelligence chat — Gemini 1.5 Pro</div>
+        <div class="chat-wrap" style="flex:1;overflow-y:auto;margin-bottom:10px">
+          <div class="chat-msg cm-ai">Good morning, Ratan. I've reviewed your 847 decisions and noticed 3 pending alerts. Your JLR acquisition has similar patterns to the Daewoo bid from 2001. Would you like me to walk through the comparison?</div>
+          <div class="chat-msg cm-u">Yes, show me the comparison and tell me what I should do differently this time</div>
+          <div class="chat-msg cm-ai">In 2001, the Daewoo bid failed primarily because of 3 factors: (1) integration timeline underestimated by 18 months, (2) no independent auto industry analyst consulted, (3) post-acquisition debt service ratio exceeded 40%. For JLR, I recommend requiring a 3rd party integration audit before close, and ensuring debt service stays below 28%.</div>
+          <div class="chat-msg cm-u">What's my blind spot rate this quarter?</div>
+          <div class="chat-msg cm-ai">This quarter you had 2 blind spots flagged — down from 5 last quarter. Remaining blind spots: external validation missing on JLR, and no rural consumer data on Nano expansion. Your overall blind spot rate has improved 65% since we started monitoring in January.</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <input class="inp" placeholder="Ask your decision history..." style="flex:1" />
+          <button class="btn btn-p" style="flex-shrink:0">Send ↗</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-t">Suggested questions</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="btn" style="text-align:left;font-size:11px;padding:7px 10px" onclick="sendPrompt('When did I last make a decision that turned out wrong and what caused it?')">When did I last make a wrong decision? ↗</button>
+          <button class="btn" style="text-align:left;font-size:11px;padding:7px 10px" onclick="sendPrompt('What are my top 3 decision blind spots based on my full history?')">What are my top 3 blind spots? ↗</button>
+          <button class="btn" style="text-align:left;font-size:11px;padding:7px 10px" onclick="sendPrompt('Show me all M&A decisions where I ignored the AI alert and what happened')">M&A decisions where I ignored alerts ↗</button>
+          <button class="btn" style="text-align:left;font-size:11px;padding:7px 10px" onclick="sendPrompt('Compare my decision success rate in Q1 2024 vs Q1 2023')">Compare Q1 2024 vs Q1 2023 success rate ↗</button>
+          <button class="btn" style="text-align:left;font-size:11px;padding:7px 10px">What decision should I be most worried about? ↗</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-t">Chat model info</div>
+        <div class="row"><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Primary model</div><div style="font-size:11px;color:var(--color-text-primary);font-weight:500">Gemini 1.5 Pro</div></div>
+        <div class="row"><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Context window</div><div style="font-size:11px;color:var(--color-text-primary)">2,000,000 tokens</div></div>
+        <div class="row"><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Decisions in context</div><div style="font-size:11px;color:var(--color-text-primary)">All 847</div></div>
+        <div class="row"><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Embedding model</div><div style="font-size:11px;color:var(--color-text-primary)">text-embedding-004</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: REPORTS -->
+<div class="page" id="p-reports">
+  <div class="grid2">
+    <div>
+      <div class="card">
+        <div class="card-t">Generate new report</div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:5px">Report type</div>
+          <select style="width:100%;font-size:12px;padding:6px 8px;border-radius:5px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary)">
+            <option>Board briefing — strategic decisions</option>
+            <option>Weekly intelligence digest</option>
+            <option>Pattern analysis report</option>
+            <option>Outcome review report</option>
+          </select>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:5px">Include decisions</div>
+          <div class="chips" style="margin-bottom:0">
+            <div class="chip active">All high-stakes</div>
+            <div class="chip active">M&A</div>
+            <div class="chip">Leadership</div>
+            <div class="chip">Finance</div>
+          </div>
+        </div>
+        <div style="margin-bottom:12px">
+          <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:5px">Period</div>
+          <select style="width:100%;font-size:12px;padding:6px 8px;border-radius:5px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary)">
+            <option>Last 30 days</option>
+            <option>Last 90 days</option>
+            <option>Q1 2024</option>
+            <option>Custom range</option>
+          </select>
+        </div>
+        <button class="btn btn-p" style="width:100%;font-size:12px">Generate with Gemini ↗</button>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-t">Report preview — Board briefing Q1 2024</div>
+        <div class="report-sec"><div class="report-sec-t">Executive summary</div><div style="font-size:11px;color:var(--color-text-secondary);line-height:1.6">During Q1 2024, 23 high-stakes decisions were logged across M&A, leadership, and product domains. Outcome score improved to 78%, up from 73% in Q4 2023.</div></div>
+        <div class="report-sec"><div class="report-sec-t">Key decisions made</div>
+          <div class="row"><div class="timeline-dot td-p" style="margin-top:3px"></div><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">JLR acquisition — £2.3B approved. Integration underway.</div></div>
+          <div class="row"><div class="timeline-dot td-g" style="margin-top:3px"></div><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Cyrus Mistry promoted to MD. Transition plan in place.</div></div>
+          <div class="row"><div class="timeline-dot td-a" style="margin-top:3px"></div><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Singapore expansion deferred to Q3. Cash preserved.</div></div>
+        </div>
+        <div class="report-sec"><div class="report-sec-t">Learnings & patterns</div><div style="font-size:11px;color:var(--color-text-secondary);line-height:1.6">Blind spot rate reduced by 40%. Recommend formalizing external analyst requirement for all M&A above £500M.</div></div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button class="btn btn-p" style="font-size:11px">Export PDF</button>
+          <button class="btn" style="font-size:11px">Export DOCX</button>
+          <button class="btn" style="font-size:11px">Share link</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: LIVE FEED -->
+<div class="page" id="p-feed">
+  <div class="card" style="margin-bottom:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div><span class="live-dot"></span><span style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Live capture — active now</span></div>
+      <span style="font-size:10px;color:var(--color-text-tertiary)">847 total captured · 7 platforms connected</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-t">Real-time decision stream</div>
+    <div class="feed-item"><div class="feed-src">🎥</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Google Meet — Board Strategy Call <span class="badge bg" style="margin-left:4px">Auto-logged</span></div><div style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px">"Approve ₹800Cr budget for EV division" — Gemini confidence 94% · 2 min ago</div></div><button class="btn" style="font-size:10px;padding:3px 7px;flex-shrink:0">View</button></div>
+    <div class="feed-item"><div class="feed-src">📧</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Gmail — CFO thread <span class="badge bg" style="margin-left:4px">Auto-logged</span></div><div style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px">"Defer Singapore office expansion to Q3" — Gemini confidence 88% · 22 min ago</div></div><button class="btn" style="font-size:10px;padding:3px 7px;flex-shrink:0">View</button></div>
+    <div class="feed-item"><div class="feed-src">💬</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Slack #leadership <span class="badge bm" style="margin-left:4px">Needs review</span></div><div style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px">"Let's go ahead with the Bangalore acquisition" — Gemini confidence 67% · 1 hr ago</div></div><button class="btn btn-p" style="font-size:10px;padding:3px 7px;flex-shrink:0">Confirm</button></div>
+    <div class="feed-item"><div class="feed-src">📹</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Zoom — Operations Review <span class="badge bg" style="margin-left:4px">Auto-logged</span></div><div style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px">"Approve new freight logistics vendor — ₹120Cr" — Gemini confidence 91% · 3 hr ago</div></div><button class="btn" style="font-size:10px;padding:3px 7px;flex-shrink:0">View</button></div>
+    <div class="feed-item"><div class="feed-src">✍️</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">DocuSign — Signed contract <span class="badge bc" style="margin-left:4px">Critical logged</span></div><div style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px">JLR acquisition final agreement executed — £2.3B · 5 hr ago</div></div><button class="btn" style="font-size:10px;padding:3px 7px;flex-shrink:0">View</button></div>
+  </div>
+  <div class="card">
+    <div class="card-t">Capture confidence distribution</div>
+    <div class="row"><div style="width:90px;font-size:11px;color:var(--color-text-secondary)">&gt;90% (auto-log)</div><div class="pbar-w"><div class="pbar pg" style="width:68%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:32px;text-align:right">68%</div></div>
+    <div class="row"><div style="width:90px;font-size:11px;color:var(--color-text-secondary)">70–90%</div><div class="pbar-w"><div class="pbar pg" style="width:20%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:32px;text-align:right">20%</div></div>
+    <div class="row"><div style="width:90px;font-size:11px;color:var(--color-text-secondary)">50–70% (review)</div><div class="pbar-w"><div class="pbar pa" style="width:8%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:32px;text-align:right">8%</div></div>
+    <div class="row"><div style="width:90px;font-size:11px;color:var(--color-text-secondary)">&lt;50% (discard)</div><div class="pbar-w"><div class="pbar pr" style="width:4%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:32px;text-align:right">4%</div></div>
+  </div>
+</div>
+
+<!-- PAGE: INTEGRATIONS -->
+<div class="page" id="p-integrations">
+  <div style="margin-bottom:12px">
+    <div class="sec-t">Meetings & calls</div>
+    <div class="conn-grid">
+      <div class="p-card ok"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div class="p-icon" style="background:#E8F0FE;font-size:14px">🎥</div><span class="badge bg">Connected</span></div><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px">Google Meet</div><div style="font-size:11px;color:var(--color-text-secondary)">Live transcript · Gemini Flash extraction</div></div>
+      <div class="p-card ok"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div class="p-icon" style="background:#E8F4FD;font-size:14px">📹</div><span class="badge bg">Connected</span></div><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px">Zoom</div><div style="font-size:11px;color:var(--color-text-secondary)">Post-call summary · webhook v2</div></div>
+      <div class="p-card"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div class="p-icon" style="background:#EDE7F6;font-size:14px">💻</div><span class="badge bm">Connect</span></div><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px">Microsoft Teams</div><div style="font-size:11px;color:var(--color-text-secondary)">Board meetings · enterprise calls</div></div>
+    </div>
+  </div>
+  <div style="margin-bottom:12px">
+    <div class="sec-t">Messaging & email</div>
+    <div class="conn-grid">
+      <div class="p-card ok"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div class="p-icon" style="background:#FFF3E0;font-size:14px">📧</div><span class="badge bg">Connected</span></div><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px">Gmail</div><div style="font-size:11px;color:var(--color-text-secondary)">Thread analysis · approval detect</div></div>
+      <div class="p-card ok"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div class="p-icon" style="background:#E3F2FD;font-size:14px">💬</div><span class="badge bg">Connected</span></div><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px">Slack</div><div style="font-size:11px;color:var(--color-text-secondary)">Channel watch · DM scan</div></div>
+      <div class="p-card"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div class="p-icon" style="background:#E8F5E9;font-size:14px">💚</div><span class="badge bh">New</span></div><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px">WhatsApp</div><div style="font-size:11px;color:var(--color-text-secondary)">Group chats · private decisions</div></div>
+    </div>
+  </div>
+  <div>
+    <div class="sec-t">Documents & workspace</div>
+    <div class="conn-grid">
+      <div class="p-card ok"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div class="p-icon" style="background:#E8F0FE;font-size:14px">📄</div><span class="badge bg">Connected</span></div><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px">Google Docs</div><div style="font-size:11px;color:var(--color-text-secondary)">Strategy docs · comments</div></div>
+      <div class="p-card ok"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div class="p-icon" style="background:#E0F2F1;font-size:14px">✍️</div><span class="badge bg">Connected</span></div><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px">DocuSign</div><div style="font-size:11px;color:var(--color-text-secondary)">Signed contracts auto-logged</div></div>
+      <div class="p-card"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div class="p-icon" style="background:#FFF9C4;font-size:14px">📝</div><span class="badge bm">Connect</span></div><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px">Notion</div><div style="font-size:11px;color:var(--color-text-secondary)">OKRs · strategy pages</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: ANALYTICS -->
+<div class="page" id="p-analytics">
+  <div class="grid4" style="margin-bottom:14px">
+    <div class="mc"><div class="mc-l">Total decisions</div><div class="mc-v">847</div><div class="mc-s up">+18% YoY</div></div>
+    <div class="mc"><div class="mc-l">High stakes %</div><div class="mc-v">24%</div><div class="mc-s neu">stable</div></div>
+    <div class="mc"><div class="mc-l">Avg time to decide</div><div class="mc-v">2.4d</div><div class="mc-s up">faster by 0.8d</div></div>
+    <div class="mc"><div class="mc-l">AI alert follow rate</div><div class="mc-v">71%</div><div class="mc-s up">+11pts</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-t">Decision volume by category</div>
+      <div class="row"><div style="width:80px;font-size:11px;color:var(--color-text-secondary)">Product</div><div class="pbar-w"><div class="pbar pp" style="width:100%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:28px;text-align:right">112</div></div>
+      <div class="row"><div style="width:80px;font-size:11px;color:var(--color-text-secondary)">Finance</div><div class="pbar-w"><div class="pbar pp" style="width:88%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:28px;text-align:right">98</div></div>
+      <div class="row"><div style="width:80px;font-size:11px;color:var(--color-text-secondary)">Leadership</div><div class="pbar-w"><div class="pbar pp" style="width:60%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:28px;text-align:right">67</div></div>
+      <div class="row"><div style="width:80px;font-size:11px;color:var(--color-text-secondary)">M&A</div><div class="pbar-w"><div class="pbar pp" style="width:38%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:28px;text-align:right">43</div></div>
+      <div class="row"><div style="width:80px;font-size:11px;color:var(--color-text-secondary)">Real estate</div><div class="pbar-w"><div class="pbar pp" style="width:27%"></div></div><div style="font-size:11px;color:var(--color-text-secondary);width:28px;text-align:right">30</div></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Outcome score — quarterly trend</div>
+      <div class="mini-chart" style="padding:0 0 4px;margin-bottom:8px;height:60px">
+        <div class="bar-item" style="height:55%;background:#AFA9EC"></div>
+        <div class="bar-item" style="height:60%;background:#AFA9EC"></div>
+        <div class="bar-item" style="height:58%;background:#AFA9EC"></div>
+        <div class="bar-item" style="height:65%;background:#534AB7"></div>
+        <div class="bar-item" style="height:70%;background:#534AB7"></div>
+        <div class="bar-item" style="height:68%;background:#534AB7"></div>
+        <div class="bar-item" style="height:73%;background:#534AB7"></div>
+        <div class="bar-item" style="height:78%;background:#534AB7"></div>
+      </div>
+      <div style="font-size:10px;color:var(--color-text-tertiary)">Q1 2023 → Q4 2024: 55% → 78% outcome score</div>
+      <div class="divider"></div>
+      <div class="card-t">AI alert impact</div>
+      <div class="row"><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Decisions following AI alert</div><div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">83% avg outcome</div></div>
+      <div class="row"><div style="flex:1;font-size:11px;color:var(--color-text-secondary)">Decisions ignoring AI alert</div><div style="font-size:12px;font-weight:500;color:#A32D2D">41% avg outcome</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: SETTINGS -->
+<div class="page" id="p-settings">
+  <div class="grid2">
+    <div>
+      <div class="card">
+        <div class="card-t">Profile</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+          <div class="av" style="width:44px;height:44px;font-size:14px">RT</div>
+          <div><div style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Ratan N. Tata</div><div style="font-size:11px;color:var(--color-text-tertiary)">ratan@tata.com · Enterprise plan</div></div>
+        </div>
+        <input class="inp" value="Ratan N. Tata" style="margin-bottom:6px;width:100%" />
+        <input class="inp" value="ratan@tata.com" style="margin-bottom:10px;width:100%" />
+        <button class="btn btn-p" style="font-size:11px">Save changes</button>
+      </div>
+      <div class="card">
+        <div class="card-t">AI model settings</div>
+        <div class="row"><div style="flex:1"><div style="font-size:12px;color:var(--color-text-primary)">Primary AI model</div><div style="font-size:10px;color:var(--color-text-tertiary)">Used for decision detection and analysis</div></div><select style="font-size:11px;padding:4px 6px;border-radius:4px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary)"><option>Gemini 1.5 Pro</option><option>Gemini 1.5 Flash</option></select></div>
+        <div class="row"><div style="flex:1"><div style="font-size:12px;color:var(--color-text-primary)">Confidence threshold</div><div style="font-size:10px;color:var(--color-text-tertiary)">Auto-log decisions above this score</div></div><select style="font-size:11px;padding:4px 6px;border-radius:4px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary)"><option>70%</option><option>80%</option><option>90%</option></select></div>
+        <div class="row"><div style="flex:1"><div style="font-size:12px;color:var(--color-text-primary)">Blind spot sensitivity</div><div style="font-size:10px;color:var(--color-text-tertiary)">How aggressively AI flags blind spots</div></div><select style="font-size:11px;padding:4px 6px;border-radius:4px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary)"><option>High</option><option>Medium</option><option>Low</option></select></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-t">Notifications</div>
+        <div class="row"><div style="flex:1"><div style="font-size:12px;color:var(--color-text-primary)">AI alert notifications</div><div style="font-size:10px;color:var(--color-text-tertiary)">When a pattern or blind spot is detected</div></div><div class="toggle"></div></div>
+        <div class="row"><div style="flex:1"><div style="font-size:12px;color:var(--color-text-primary)">Outcome check-in reminders</div><div style="font-size:10px;color:var(--color-text-tertiary)">At 30, 90, 180 day milestones</div></div><div class="toggle"></div></div>
+        <div class="row"><div style="flex:1"><div style="font-size:12px;color:var(--color-text-primary)">Weekly intelligence digest</div><div style="font-size:10px;color:var(--color-text-tertiary)">Every Monday morning email</div></div><div class="toggle"></div></div>
+        <div class="row"><div style="flex:1"><div style="font-size:12px;color:var(--color-text-primary)">Live capture alerts</div><div style="font-size:10px;color:var(--color-text-tertiary)">When a decision needs manual review</div></div><div class="toggle off"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-t">Privacy & security</div>
+        <div class="row"><div style="flex:1;font-size:12px;color:var(--color-text-primary)">Data encryption</div><div style="font-size:11px;color:var(--color-text-secondary)">AES-256 · GCP KMS</div></div>
+        <div class="row"><div style="flex:1;font-size:12px;color:var(--color-text-primary)">PII stripping</div><div style="font-size:11px;color:#3B6D11">Active</div></div>
+        <div class="row"><div style="flex:1;font-size:12px;color:var(--color-text-primary)">Data retention</div><div style="font-size:11px;color:var(--color-text-secondary)">Unlimited (Enterprise)</div></div>
+        <div class="row"><div style="flex:1;font-size:12px;color:var(--color-text-primary)">SSO / SAML</div><div style="font-size:11px;color:#3B6D11">Enabled</div></div>
+        <div class="divider"></div>
+        <button class="btn" style="font-size:11px;color:#A32D2D;border-color:#F09595;width:100%">Export all my data</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+</div>
+
+<script>
+const pages={
+  dashboard:{title:'Dashboard',sub:'Good morning, Ratan — 3 alerts need your attention'},
+  log:{title:'Decision Log',sub:'847 decisions captured across 7 platforms'},
+  detail:{title:'Decision detail — Acquire Jaguar Land Rover',sub:'High stakes · M&A · Google Meet · 2 days ago'},
+  patterns:{title:'Patterns',sub:'34 patterns detected — 7 require attention'},
+  outcomes:{title:'Outcome Tracker',sub:'11 pending reviews · 3 overdue'},
+  blindspots:{title:'Blind Spots',sub:'3 active blind spots detected by Gemini'},
+  chat:{title:'AI Chat',sub:'Ask your full decision history · Gemini 1.5 Pro'},
+  reports:{title:'Board Reports',sub:'Generate intelligence briefings with Gemini'},
+  feed:{title:'Live Feed',sub:'Real-time decision capture stream'},
+  integrations:{title:'Integrations',sub:'7 platforms connected · 3 available'},
+  analytics:{title:'Analytics',sub:'Decision performance trends and insights'},
+  settings:{title:'Settings',sub:'Profile, AI model, notifications, privacy'}
+};
+function go(id){
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  const ni=document.querySelector('.ni[onclick="go(\''+id+'\')"]');
+  if(ni)ni.classList.add('on');
+  const pg=document.getElementById('p-'+id);
+  if(pg)pg.classList.add('on');
+  const info=pages[id]||{title:id,sub:''};
+  document.getElementById('pg-title').textContent=info.title;
+  document.getElementById('pg-sub').textContent=info.sub;
+}
+</script>
