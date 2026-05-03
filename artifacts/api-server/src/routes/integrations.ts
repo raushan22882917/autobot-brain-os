@@ -7,6 +7,7 @@ const router = Router();
 const appBasePath = process.env.APP_BASE_PATH ?? "";
 const integrationsPath = `${appBasePath}/integrations`;
 const redirectToIntegrations = (suffix = "") => `${integrationsPath}${suffix}`;
+const googleCallbackUrl = "https://c2d0742d-1400-4e27-81ce-abe28d8f688a-00-p9m2atey8zeq.pike.replit.dev/api/integrations/google/callback";
 
 const PLATFORMS = ["gmail", "zoom", "slack", "meet", "teams", "outlook", "notion", "docusign"];
 
@@ -42,16 +43,8 @@ const requireAuth = (req: any, res: any, next: any) => {
 };
 
 function getCallbackUrl(req: any): string {
-  // Allow explicit override via env (most reliable)
-  if (process.env.GOOGLE_REDIRECT_URI) {
-    return process.env.GOOGLE_REDIRECT_URI;
-  }
-  const domain =
-    process.env.REPLIT_DOMAINS?.split(",")[0] ||
-    req.get("x-forwarded-host") ||
-    req.get("host") ||
-    "localhost";
-  return `https://${domain}/api/integrations/google/callback`;
+  if (process.env.GOOGLE_REDIRECT_URI) return process.env.GOOGLE_REDIRECT_URI;
+  return googleCallbackUrl;
 }
 
 // ── List all integrations ────────────────────────────────────────────────────
