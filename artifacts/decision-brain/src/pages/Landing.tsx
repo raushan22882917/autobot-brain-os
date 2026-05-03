@@ -211,6 +211,16 @@ export default function Landing() {
           </div>
         </section>
 
+        <section className="px-6 md:px-10 pt-6">
+          <div className="max-w-7xl mx-auto rounded-3xl overflow-hidden border border-white/10 bg-[#0d0d0d]">
+            <img
+              src="/images/second-brain-animated.png"
+              alt="How Decision Brain works for founders"
+              className="w-full h-auto object-cover"
+            />
+          </div>
+        </section>
+
         {/* ── STATS BAR ────────────────────────────────────────── */}
         <section id="proof" className="border-y border-white/8" style={{ background: "#0d0d0d" }}>
           <div className="max-w-7xl mx-auto px-6 md:px-10 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
