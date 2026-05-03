@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiUrl } from "@/lib/apiUrl";
+import { Link } from "wouter";
 
 const PLANS = [
   {
@@ -222,6 +223,12 @@ export default function Pricing() {
 
   return (
     <div className="space-y-10 animate-in fade-in duration-500">
+      <div className="flex flex-wrap gap-3 text-sm text-white/60">
+        <Link href="/about"><span className="hover:text-white cursor-pointer">About</span></Link>
+        <Link href="/product"><span className="hover:text-white cursor-pointer">Product</span></Link>
+        <Link href="/contact"><span className="hover:text-white cursor-pointer">Contact</span></Link>
+        <Link href="/integrations"><span className="hover:text-white cursor-pointer">Integrations</span></Link>
+      </div>
 
       {/* Active subscription banner */}
       {subscription && activePlan !== "free" && (

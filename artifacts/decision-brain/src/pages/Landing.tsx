@@ -73,6 +73,21 @@ export default function Landing() {
             <Link href="/contact">
               <span className="hover:text-white transition-colors cursor-pointer">Contact</span>
             </Link>
+            <Link href="/product">
+              <span className="hover:text-white transition-colors cursor-pointer">Product</span>
+            </Link>
+            <Link href="/pricing">
+              <span className="hover:text-white transition-colors cursor-pointer">Pricing</span>
+            </Link>
+            <Link href="/terms">
+              <span className="hover:text-white transition-colors cursor-pointer">Terms & Conditions</span>
+            </Link>
+            <Link href="/privacy">
+              <span className="hover:text-white transition-colors cursor-pointer">Privacy Policy</span>
+            </Link>
+            <Link href="/integrations">
+              <span className="hover:text-white transition-colors cursor-pointer">Integrations</span>
+            </Link>
           </nav>
           <div className="flex items-center gap-3">
             <Link href="/sign-in">

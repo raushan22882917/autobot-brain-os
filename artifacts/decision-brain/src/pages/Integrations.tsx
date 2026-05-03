@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiUrl } from "@/lib/apiUrl";
 import { SiGmail, SiZoom, SiSlack, SiNotion } from "react-icons/si";
 import { Mail, RefreshCw, FileSignature, Video, Users, ExternalLink, CheckCircle2, Loader2, Zap } from "lucide-react";
+import { Link } from "wouter";
 
 const GOOGLE_PLATFORMS = ["gmail", "meet"];
 
@@ -167,6 +168,12 @@ export default function Integrations() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex flex-wrap gap-3 text-sm text-white/60">
+        <Link href="/about"><span className="hover:text-white cursor-pointer">About</span></Link>
+        <Link href="/product"><span className="hover:text-white cursor-pointer">Product</span></Link>
+        <Link href="/pricing"><span className="hover:text-white cursor-pointer">Pricing</span></Link>
+        <Link href="/contact"><span className="hover:text-white cursor-pointer">Contact</span></Link>
+      </div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-serif font-bold text-white tracking-tight">Intelligence Sources</h1>

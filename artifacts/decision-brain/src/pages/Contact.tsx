@@ -1,3 +1,4 @@
+import { Link } from "wouter";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 export default function Contact() {
@@ -20,6 +21,12 @@ export default function Contact() {
               <p className="text-white/50 text-sm">{item.text}</p>
             </div>
           ))}
+        </div>
+        <div className="flex flex-wrap gap-3 text-sm text-white/60">
+          <Link href="/about"><span className="hover:text-white cursor-pointer">About</span></Link>
+          <Link href="/product"><span className="hover:text-white cursor-pointer">Product</span></Link>
+          <Link href="/pricing"><span className="hover:text-white cursor-pointer">Pricing</span></Link>
+          <Link href="/integrations"><span className="hover:text-white cursor-pointer">Integrations</span></Link>
         </div>
       </div>
     </div>

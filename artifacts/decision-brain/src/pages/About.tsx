@@ -35,6 +35,11 @@ export default function About() {
             Contact us
           </span>
         </Link>
+        <div className="flex flex-wrap gap-3 text-sm text-white/60">
+          <Link href="/product"><span className="hover:text-white cursor-pointer">Product</span></Link>
+          <Link href="/pricing"><span className="hover:text-white cursor-pointer">Pricing</span></Link>
+          <Link href="/integrations"><span className="hover:text-white cursor-pointer">Integrations</span></Link>
+        </div>
       </div>
     </div>
   );
