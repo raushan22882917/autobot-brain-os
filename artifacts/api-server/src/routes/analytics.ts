@@ -166,6 +166,7 @@ router.get("/patterns", requireAuth, async (req: any, res) => {
     let aiInsights: string[] = [];
     if (decisions.length >= 3) {
       try {
+        if (!ai) throw new Error("Gemini not configured");
         const decisionSummary = decisions.slice(0, 30).map((d) => {
           const outcome = outcomes.find((o) => o.decisionId === d.id);
           return `${d.title} | ${d.stakes} stakes | ${d.sourcePlatform ?? "manual"} | score: ${outcome?.score ?? "N/A"} | tags: ${d.tags.join(",")}`;
@@ -343,6 +344,7 @@ router.get("/advisors", requireAuth, async (req: any, res) => {
     let aiAdvisors: { name: string; initials: string; domain: string; reason: string; weakArea: string }[] = [];
     if (decisions.length >= 1) {
       try {
+        if (!ai) throw new Error("Gemini not configured");
         const weakDomains = domains.slice(0, 4).map((d) => d.domain).join(", ");
         const decisionSample = decisions.slice(0, 20).map((d) => `${d.title} | ${d.stakes} | ${d.tags.join(",")}`).join("\n");
         const response = await ai.models.generateContent({
@@ -420,6 +422,7 @@ router.get("/blindspots", requireAuth, async (req: any, res) => {
     let aiBlindSpots: string[] = [];
     if (decisions.length >= 3) {
       try {
+        if (!ai) throw new Error("Gemini not configured");
         const summary = decisions.slice(0, 30).map((d) => `${d.title} | ${d.stakes} | ${d.tags.join(",")}`).join("\n");
         const response = await ai.models.generateContent({
           model: "gemini-2.5-flash",

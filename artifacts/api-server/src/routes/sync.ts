@@ -24,6 +24,7 @@ async function extractDecisionsWithGemini(
   source: string,
   sourceRef: string
 ): Promise<Array<{ title: string; description: string; stakes: string; tags: string[] }>> {
+  if (!ai) return [];
   try {
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",

@@ -80,6 +80,10 @@ INSTRUCTIONS:
       { role: "user", parts: [{ text: message }] },
     ];
 
+    if (!ai) {
+      return res.json({ reply: "AI chat is not configured. Add a Gemini API key to enable this feature.", relevantDecisionIds: [] });
+    }
+
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents,
