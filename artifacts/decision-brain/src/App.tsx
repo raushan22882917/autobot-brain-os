@@ -100,12 +100,105 @@ const clerkAppearance = {
   },
 };
 
+const AUTH_QUOTES = [
+  { quote: "The quality of your decisions determines the quality of your life.", author: "Ray Dalio" },
+  { quote: "In any moment of decision, the best thing you can do is the right thing.", author: "Theodore Roosevelt" },
+  { quote: "Decision is a sharp knife that cuts clean and straight.", author: "Gordon Graham" },
+];
+
+function AuthImagePanel({ side }: { side: "left" | "right" }) {
+  const q = AUTH_QUOTES[Math.floor(Math.random() * AUTH_QUOTES.length)];
+  return (
+    <div className="hidden lg:flex relative w-1/2 flex-col overflow-hidden">
+      <img
+        src={
+          side === "left"
+            ? "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80"
+            : "https://images.unsplash.com/photo-1553028826-f4804a6dba3b?w=1200&q=80"
+        }
+        alt="Executive workspace"
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ filter: "brightness(0.35) saturate(0.7)" }}
+      />
+      {/* Red gradient overlay */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            side === "left"
+              ? "linear-gradient(135deg, rgba(220,38,38,0.35) 0%, rgba(5,5,5,0.6) 100%)"
+              : "linear-gradient(225deg, rgba(220,38,38,0.35) 0%, rgba(5,5,5,0.6) 100%)",
+        }}
+      />
+      {/* Content */}
+      <div className="relative z-10 flex flex-col justify-between h-full p-12">
+        {/* Logo */}
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "#DC2626" }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2a10 10 0 1 0 10 10" /><path d="M12 6v6l4 2" /><circle cx="19" cy="5" r="3" />
+            </svg>
+          </div>
+          <div>
+            <p className="font-bold text-white text-[14px] tracking-wide">Decision Brain</p>
+            <p className="text-[10px] font-semibold tracking-[0.18em] uppercase" style={{ color: "#DC2626" }}>Intelligence OS</p>
+          </div>
+        </div>
+
+        {/* Quote */}
+        <div className="space-y-4">
+          <div className="text-5xl font-serif leading-none mb-2" style={{ color: "rgba(220,38,38,0.8)" }}>"</div>
+          <p className="text-xl font-medium text-white leading-relaxed max-w-xs" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>
+            {q.quote}
+          </p>
+          <p className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.45)" }}>— {q.author}</p>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4">
+          {[
+            { val: "94%", label: "Decision recall" },
+            { val: "3.2×", label: "Faster patterns" },
+            { val: "68%", label: "Fewer mistakes" },
+          ].map((s) => (
+            <div key={s.label} className="text-center">
+              <p className="text-2xl font-bold text-white">{s.val}</p>
+              <p className="text-[11px] mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SignInPage() {
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-background px-4 relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="relative z-10">
-        <SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} />
+    <div className="flex min-h-[100dvh]" style={{ background: "#080808" }}>
+      {/* Left — image */}
+      <AuthImagePanel side="left" />
+
+      {/* Right — form */}
+      <div className="flex flex-1 flex-col items-center justify-center px-6 py-12 relative overflow-hidden">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[400px] pointer-events-none"
+          style={{ background: "radial-gradient(ellipse, rgba(220,38,38,0.08) 0%, transparent 70%)" }} />
+        <div className="relative z-10 w-full max-w-md">
+          {/* Mobile logo */}
+          <div className="flex items-center gap-2.5 mb-8 lg:hidden">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#DC2626" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2a10 10 0 1 0 10 10" /><path d="M12 6v6l4 2" /><circle cx="19" cy="5" r="3" />
+              </svg>
+            </div>
+            <span className="font-bold text-white text-base">Decision Brain</span>
+          </div>
+          <div className="mb-6">
+            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-2" style={{ color: "#DC2626" }}>Welcome back</p>
+            <h1 className="text-3xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Sign in to your OS</h1>
+            <p className="text-sm mt-1" style={{ color: "#555" }}>Your decision intelligence is waiting.</p>
+          </div>
+          <SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} />
+        </div>
       </div>
     </div>
   );
@@ -113,11 +206,32 @@ function SignInPage() {
 
 function SignUpPage() {
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-background px-4 relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="relative z-10">
-        <SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} />
+    <div className="flex min-h-[100dvh]" style={{ background: "#080808" }}>
+      {/* Left — form */}
+      <div className="flex flex-1 flex-col items-center justify-center px-6 py-12 relative overflow-hidden">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[400px] pointer-events-none"
+          style={{ background: "radial-gradient(ellipse, rgba(220,38,38,0.08) 0%, transparent 70%)" }} />
+        <div className="relative z-10 w-full max-w-md">
+          {/* Mobile logo */}
+          <div className="flex items-center gap-2.5 mb-8 lg:hidden">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#DC2626" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2a10 10 0 1 0 10 10" /><path d="M12 6v6l4 2" /><circle cx="19" cy="5" r="3" />
+              </svg>
+            </div>
+            <span className="font-bold text-white text-base">Decision Brain</span>
+          </div>
+          <div className="mb-6">
+            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-2" style={{ color: "#DC2626" }}>Get started free</p>
+            <h1 className="text-3xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Build your decision OS</h1>
+            <p className="text-sm mt-1" style={{ color: "#555" }}>Join executives who measure their judgment.</p>
+          </div>
+          <SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} />
+        </div>
       </div>
+
+      {/* Right — image */}
+      <AuthImagePanel side="right" />
     </div>
   );
 }
