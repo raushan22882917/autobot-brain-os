@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { BrainCircuit, Shield, Sparkles, Network } from "lucide-react";
+import { ArrowRight, BrainCircuit, Shield, Sparkles, Network } from "lucide-react";
 
 export default function Product() {
   return (
@@ -17,6 +17,12 @@ export default function Product() {
         <p className="text-white/60 text-lg max-w-3xl leading-relaxed">
           Autobot360 captures decisions, connects your tools, and turns every outcome into a better next move.
         </p>
+        <div className="flex flex-wrap gap-3 text-sm text-white/60">
+          <Link href="/about"><span className="hover:text-white cursor-pointer">About</span></Link>
+          <Link href="/contact"><span className="hover:text-white cursor-pointer">Contact</span></Link>
+          <Link href="/pricing"><span className="hover:text-white cursor-pointer">Pricing</span></Link>
+          <Link href="/integrations-public"><span className="hover:text-white cursor-pointer">Integrations</span></Link>
+        </div>
         <div className="grid md:grid-cols-3 gap-4">
           {[
             { icon: Shield, title: "Private by design", text: "Built for secure, read-only decision capture." },
@@ -31,8 +37,8 @@ export default function Product() {
           ))}
         </div>
         <Link href="/pricing">
-          <span className="inline-flex text-sm font-semibold px-5 py-3 rounded-xl cursor-pointer" style={{ background: "#DC2626", color: "#fff" }}>
-            View pricing
+          <span className="inline-flex items-center text-sm font-semibold px-5 py-3 rounded-xl cursor-pointer" style={{ background: "#DC2626", color: "#fff" }}>
+            View pricing <ArrowRight className="w-4 h-4 ml-2" />
           </span>
         </Link>
       </div>

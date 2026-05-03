@@ -346,7 +346,7 @@ export default function App() {
               <ProtectedRoute path="/about" component={About} />
               <ProtectedRoute path="/contact" component={Contact} />
               <ProtectedRoute path="/product" component={Product} />
-              <ProtectedRoute path="/integrations-public" component={IntegrationsPublic} />
+              <Route path="/integrations-public" component={IntegrationsPublic} />
               <ProtectedRoute path="/features" component={Features} />
               <ProtectedRoute path="/results" component={Results} />
               <ProtectedRoute path="/stories" component={Stories} />

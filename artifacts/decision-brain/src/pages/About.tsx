@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { BrainCircuit, Shield, Users, Sparkles } from "lucide-react";
+import { ArrowRight, BrainCircuit, Shield, Users, Sparkles } from "lucide-react";
 
 export default function About() {
   return (
@@ -17,6 +17,12 @@ export default function About() {
         <p className="text-white/60 text-lg max-w-3xl leading-relaxed">
           Autobot360 helps founders and teams capture decisions, connect context, and learn from outcomes with a premium, privacy-first experience.
         </p>
+        <div className="flex flex-wrap gap-3 text-sm text-white/60">
+          <Link href="/contact"><span className="hover:text-white cursor-pointer">Contact</span></Link>
+          <Link href="/product"><span className="hover:text-white cursor-pointer">Product</span></Link>
+          <Link href="/pricing"><span className="hover:text-white cursor-pointer">Pricing</span></Link>
+          <Link href="/integrations-public"><span className="hover:text-white cursor-pointer">Integrations</span></Link>
+        </div>
         <div className="grid md:grid-cols-3 gap-4">
           {[
             { icon: Shield, title: "Private by design", text: "Read-only integrations and secure handling." },
@@ -32,14 +38,9 @@ export default function About() {
         </div>
         <Link href="/contact">
           <span className="inline-flex text-sm font-semibold px-5 py-3 rounded-xl cursor-pointer" style={{ background: "#DC2626", color: "#fff" }}>
-            Contact us
+            Contact us <ArrowRight className="w-4 h-4 ml-2" />
           </span>
         </Link>
-        <div className="flex flex-wrap gap-3 text-sm text-white/60">
-          <Link href="/product"><span className="hover:text-white cursor-pointer">Product</span></Link>
-          <Link href="/pricing"><span className="hover:text-white cursor-pointer">Pricing</span></Link>
-          <Link href="/integrations"><span className="hover:text-white cursor-pointer">Integrations</span></Link>
-        </div>
       </div>
     </div>
   );

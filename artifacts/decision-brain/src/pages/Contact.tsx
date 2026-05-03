@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { ArrowRight, Mail, Phone, MapPin } from "lucide-react";
 
 export default function Contact() {
   return (
@@ -22,12 +22,18 @@ export default function Contact() {
             </div>
           ))}
         </div>
+        <p className="text-white/50 text-sm">Prefer a quick overview first? Explore the other pages below.</p>
         <div className="flex flex-wrap gap-3 text-sm text-white/60">
           <Link href="/about"><span className="hover:text-white cursor-pointer">About</span></Link>
           <Link href="/product"><span className="hover:text-white cursor-pointer">Product</span></Link>
           <Link href="/pricing"><span className="hover:text-white cursor-pointer">Pricing</span></Link>
-          <Link href="/integrations"><span className="hover:text-white cursor-pointer">Integrations</span></Link>
+          <Link href="/integrations-public"><span className="hover:text-white cursor-pointer">Integrations</span></Link>
         </div>
+        <Link href="/about">
+          <span className="inline-flex items-center text-sm font-semibold px-5 py-3 rounded-xl cursor-pointer" style={{ background: "#DC2626", color: "#fff" }}>
+            Learn more <ArrowRight className="w-4 h-4 ml-2" />
+          </span>
+        </Link>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Mail, Video, MessageSquare, NotepadText, Globe } from "lucide-react";
+import { ArrowRight, Mail, Video, MessageSquare, NotepadText, Globe } from "lucide-react";
 
 const items = [
   { icon: Mail, name: "Gmail", desc: "Capture decisions from email threads." },
@@ -15,6 +15,12 @@ export default function IntegrationsPublic() {
       <div className="max-w-6xl mx-auto space-y-8">
         <h1 className="text-4xl font-bold" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Integrations</h1>
         <p className="text-white/60 max-w-3xl leading-relaxed">See the list of supported tools Autobot360 can connect to.</p>
+        <div className="flex flex-wrap gap-3 text-sm text-white/60">
+          <Link href="/about"><span className="hover:text-white cursor-pointer">About</span></Link>
+          <Link href="/contact"><span className="hover:text-white cursor-pointer">Contact</span></Link>
+          <Link href="/product"><span className="hover:text-white cursor-pointer">Product</span></Link>
+          <Link href="/pricing"><span className="hover:text-white cursor-pointer">Pricing</span></Link>
+        </div>
         <div className="grid md:grid-cols-3 gap-4">
           {items.map((item) => (
             <div key={item.name} className="rounded-2xl border border-white/10 p-6" style={{ background: "#0d0d0d" }}>
@@ -25,8 +31,8 @@ export default function IntegrationsPublic() {
           ))}
         </div>
         <Link href="/contact">
-          <span className="inline-flex text-sm font-semibold px-5 py-3 rounded-xl cursor-pointer" style={{ background: "#DC2626", color: "#fff" }}>
-            Request a connector
+          <span className="inline-flex items-center text-sm font-semibold px-5 py-3 rounded-xl cursor-pointer" style={{ background: "#DC2626", color: "#fff" }}>
+            Request a connector <ArrowRight className="w-4 h-4 ml-2" />
           </span>
         </Link>
       </div>

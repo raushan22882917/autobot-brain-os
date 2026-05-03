@@ -227,7 +227,7 @@ export default function Pricing() {
         <Link href="/about"><span className="hover:text-white cursor-pointer">About</span></Link>
         <Link href="/product"><span className="hover:text-white cursor-pointer">Product</span></Link>
         <Link href="/contact"><span className="hover:text-white cursor-pointer">Contact</span></Link>
-        <Link href="/integrations"><span className="hover:text-white cursor-pointer">Integrations</span></Link>
+        <Link href="/integrations-public"><span className="hover:text-white cursor-pointer">Integrations</span></Link>
       </div>
 
       {/* Active subscription banner */}
