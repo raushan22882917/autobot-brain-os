@@ -67,11 +67,11 @@ export default function Landing() {
             <span className="font-bold text-xl tracking-tight text-white">Autobot360</span>
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-white/60">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#proof" className="hover:text-white transition-colors">Results</a>
-            <a href="#testimonials" className="hover:text-white transition-colors">Stories</a>
-            <Link href="/analytics">
-              <span className="hover:text-white transition-colors cursor-pointer">Analytics</span>
+            <Link href="/about">
+              <span className="hover:text-white transition-colors cursor-pointer">About</span>
+            </Link>
+            <Link href="/contact">
+              <span className="hover:text-white transition-colors cursor-pointer">Contact</span>
             </Link>
           </nav>
           <div className="flex items-center gap-3">
