@@ -39,10 +39,15 @@ const requireAuth = (req: any, res: any, next: any) => {
 };
 
 function getCallbackUrl(req: any): string {
+  // Allow explicit override via env (most reliable)
+  if (process.env.GOOGLE_REDIRECT_URI) {
+    return process.env.GOOGLE_REDIRECT_URI;
+  }
   const domain =
     process.env.REPLIT_DOMAINS?.split(",")[0] ||
     req.get("x-forwarded-host") ||
-    req.get("host");
+    req.get("host") ||
+    "localhost";
   return `https://${domain}/api/integrations/google/callback`;
 }
 
@@ -103,6 +108,7 @@ router.get("/google/auth", requireAuth, async (req: any, res) => {
     ).toString("base64url");
 
     const callbackUrl = getCallbackUrl(req);
+    req.log.info({ callbackUrl, platform }, "Starting Google OAuth — redirect URI");
 
     const params = new URLSearchParams({
       client_id: clientId,

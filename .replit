@@ -35,3 +35,4 @@ externalPort = 3000
 
 [userenv.shared]
 VITE_CLERK_PUBLISHABLE_KEY = "pk_test_aGFuZHktaG9ybmV0LTI2LmNsZXJrLmFjY291bnRzLmRldiQ"
+GOOGLE_REDIRECT_URI = "https://c2d0742d-1400-4e27-81ce-abe28d8f688a-00-p9m2atey8zeq.pike.replit.dev/api/integrations/google/callback"
