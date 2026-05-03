@@ -3,20 +3,34 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Decision Brain API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: decisions
+    description: Decision log operations
+  - name: outcomes
+    description: Outcome tracking
+  - name: alerts
+    description: AI pattern alerts
+  - name: integrations
+    description: Platform integrations
+  - name: reports
+    description: Board report generation
+  - name: analytics
+    description: Analytics and insights
+  - name: chat
+    description: AI decision chat
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,7 +38,471 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /decisions:
+    get:
+      operationId: listDecisions
+      tags: [decisions]
+      summary: List decisions with filters
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: platform
+          in: query
+          schema:
+            type: string
+        - name: stakes
+          in: query
+          schema:
+            type: string
+            enum: [low, medium, high, critical]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, reversed, pending]
+        - name: dateFrom
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: dateTo
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of decisions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DecisionListResponse"
+    post:
+      operationId: createDecision
+      tags: [decisions]
+      summary: Manually log a decision
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDecisionBody"
+      responses:
+        "201":
+          description: Decision created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Decision"
+
+  /decisions/{id}:
+    get:
+      operationId: getDecision
+      tags: [decisions]
+      summary: Get a decision by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Decision detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DecisionDetail"
+    patch:
+      operationId: updateDecision
+      tags: [decisions]
+      summary: Update a decision
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDecisionBody"
+      responses:
+        "200":
+          description: Updated decision
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Decision"
+    delete:
+      operationId: deleteDecision
+      tags: [decisions]
+      summary: Delete a decision
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /decisions/{id}/similar:
+    get:
+      operationId: getSimilarDecisions
+      tags: [decisions]
+      summary: Get semantically similar decisions
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Similar decisions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Decision"
+
+  /outcomes:
+    post:
+      operationId: createOutcome
+      tags: [outcomes]
+      summary: Log an outcome for a decision
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOutcomeBody"
+      responses:
+        "201":
+          description: Outcome created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Outcome"
+
+  /outcomes/pending:
+    get:
+      operationId: getPendingOutcomes
+      tags: [outcomes]
+      summary: Get decisions awaiting outcome review
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Pending outcomes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PendingOutcome"
+
+  /outcomes/{id}:
+    patch:
+      operationId: updateOutcome
+      tags: [outcomes]
+      summary: Update an outcome
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateOutcomeBody"
+      responses:
+        "200":
+          description: Updated outcome
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Outcome"
+
+  /alerts:
+    get:
+      operationId: listAlerts
+      tags: [alerts]
+      summary: List alerts
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: unread
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of alerts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Alert"
+
+  /alerts/{id}/read:
+    patch:
+      operationId: markAlertRead
+      tags: [alerts]
+      summary: Mark alert as read
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Alert updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Alert"
+
+  /integrations:
+    get:
+      operationId: listIntegrations
+      tags: [integrations]
+      summary: List platform integrations
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of integrations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Integration"
+
+  /integrations/{platform}/connect:
+    post:
+      operationId: connectIntegration
+      tags: [integrations]
+      summary: Connect a platform integration
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: platform
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Connection initiated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Integration"
+
+  /integrations/{platform}/disconnect:
+    delete:
+      operationId: disconnectIntegration
+      tags: [integrations]
+      summary: Disconnect a platform integration
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: platform
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Disconnected
+
+  /reports:
+    get:
+      operationId: listReports
+      tags: [reports]
+      summary: List board reports
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Report"
+    post:
+      operationId: generateReport
+      tags: [reports]
+      summary: Generate a board report
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateReportBody"
+      responses:
+        "201":
+          description: Report generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Report"
+
+  /reports/{id}:
+    get:
+      operationId: getReport
+      tags: [reports]
+      summary: Get a report
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Report"
+
+  /analytics/overview:
+    get:
+      operationId: getAnalyticsOverview
+      tags: [analytics]
+      summary: Dashboard analytics overview
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Analytics overview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsOverview"
+
+  /analytics/outcomes:
+    get:
+      operationId: getOutcomeAnalytics
+      tags: [analytics]
+      summary: Outcome performance analytics
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Outcome analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OutcomeAnalytics"
+
+  /analytics/patterns:
+    get:
+      operationId: getPatternAnalytics
+      tags: [analytics]
+      summary: Decision pattern analytics
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Pattern analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatternAnalytics"
+
+  /analytics/blindspots:
+    get:
+      operationId: getBlindspotAnalytics
+      tags: [analytics]
+      summary: Blind spot analysis
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Blind spot analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlindspotAnalytics"
+
+  /chat:
+    post:
+      operationId: chatWithDecisions
+      tags: [chat]
+      summary: Chat with your decision history (AI RAG)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatBody"
+      responses:
+        "200":
+          description: AI chat response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatResponse"
+
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
   schemas:
     HealthStatus:
       type: object
@@ -34,3 +512,507 @@ components:
       required:
         - status
 
+    Decision:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        sourcePlatform:
+          type: string
+          nullable: true
+          enum: [gmail, zoom, slack, meet, teams, notion, manual, null]
+        stakes:
+          type: string
+          enum: [low, medium, high, critical]
+        status:
+          type: string
+          enum: [active, reversed, pending]
+        tags:
+          type: array
+          items:
+            type: string
+        decidedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        outcomeScore:
+          type: integer
+          nullable: true
+        alertCount:
+          type: integer
+      required:
+        - id
+        - userId
+        - title
+        - stakes
+        - status
+        - tags
+        - createdAt
+        - alertCount
+
+    DecisionDetail:
+      allOf:
+        - $ref: "#/components/schemas/Decision"
+        - type: object
+          properties:
+            rawContext:
+              type: string
+              nullable: true
+            outcomes:
+              type: array
+              items:
+                $ref: "#/components/schemas/Outcome"
+            alerts:
+              type: array
+              items:
+                $ref: "#/components/schemas/Alert"
+          required:
+            - outcomes
+            - alerts
+
+    DecisionListResponse:
+      type: object
+      properties:
+        decisions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Decision"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - decisions
+        - total
+        - page
+        - limit
+        - totalPages
+
+    CreateDecisionBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        stakes:
+          type: string
+          enum: [low, medium, high, critical]
+          default: medium
+        tags:
+          type: array
+          items:
+            type: string
+        decidedAt:
+          type: string
+          format: date-time
+        sourcePlatform:
+          type: string
+      required:
+        - title
+
+    UpdateDecisionBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        stakes:
+          type: string
+          enum: [low, medium, high, critical]
+        status:
+          type: string
+          enum: [active, reversed, pending]
+        tags:
+          type: array
+          items:
+            type: string
+
+    Outcome:
+      type: object
+      properties:
+        id:
+          type: string
+        decisionId:
+          type: string
+        userId:
+          type: string
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        notes:
+          type: string
+          nullable: true
+        checkInterval:
+          type: string
+          enum: ["30d", "90d", "180d", "1y"]
+        trackedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - decisionId
+        - userId
+        - score
+        - checkInterval
+        - trackedAt
+
+    PendingOutcome:
+      type: object
+      properties:
+        decision:
+          $ref: "#/components/schemas/Decision"
+        dueAt:
+          type: string
+          format: date-time
+        checkInterval:
+          type: string
+      required:
+        - decision
+        - dueAt
+        - checkInterval
+
+    CreateOutcomeBody:
+      type: object
+      properties:
+        decisionId:
+          type: string
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        notes:
+          type: string
+        checkInterval:
+          type: string
+          enum: ["30d", "90d", "180d", "1y"]
+          default: "90d"
+      required:
+        - decisionId
+        - score
+
+    UpdateOutcomeBody:
+      type: object
+      properties:
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        notes:
+          type: string
+
+    Alert:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        decisionId:
+          type: string
+          nullable: true
+        alertType:
+          type: string
+          enum: [pattern_match, blind_spot, repeat_mistake, similarity]
+        title:
+          type: string
+        description:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high]
+        isRead:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - userId
+        - alertType
+        - title
+        - description
+        - severity
+        - isRead
+        - createdAt
+
+    Integration:
+      type: object
+      properties:
+        id:
+          type: string
+        platform:
+          type: string
+          enum: [gmail, zoom, slack, meet, teams, outlook, notion, docusign]
+        status:
+          type: string
+          enum: [connected, disconnected, error]
+        lastSyncedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - platform
+        - status
+        - createdAt
+
+    Report:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        title:
+          type: string
+          nullable: true
+        reportType:
+          type: string
+          enum: [board_briefing, weekly, pattern_analysis]
+        content:
+          type: string
+          nullable: true
+        periodStart:
+          type: string
+          format: date
+          nullable: true
+        periodEnd:
+          type: string
+          format: date
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - userId
+        - reportType
+        - createdAt
+
+    GenerateReportBody:
+      type: object
+      properties:
+        decisionIds:
+          type: array
+          items:
+            type: string
+        reportType:
+          type: string
+          enum: [board_briefing, weekly, pattern_analysis]
+          default: board_briefing
+        periodStart:
+          type: string
+          format: date
+        periodEnd:
+          type: string
+          format: date
+      required:
+        - decisionIds
+
+    AnalyticsOverview:
+      type: object
+      properties:
+        totalDecisions:
+          type: integer
+        decisionsThisMonth:
+          type: integer
+        decisionsThisWeek:
+          type: integer
+        avgOutcomeScore:
+          type: number
+        unreadAlerts:
+          type: integer
+        pendingOutcomes:
+          type: integer
+        decisionsByStakes:
+          type: object
+          additionalProperties:
+            type: integer
+        decisionsByPlatform:
+          type: object
+          additionalProperties:
+            type: integer
+        recentDecisions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Decision"
+        outcomeScoreTrend:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrendPoint"
+        decisionVelocity:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrendPoint"
+      required:
+        - totalDecisions
+        - decisionsThisMonth
+        - decisionsThisWeek
+        - avgOutcomeScore
+        - unreadAlerts
+        - pendingOutcomes
+        - decisionsByStakes
+        - decisionsByPlatform
+        - recentDecisions
+        - outcomeScoreTrend
+        - decisionVelocity
+
+    OutcomeAnalytics:
+      type: object
+      properties:
+        winRate:
+          type: number
+        avgScore:
+          type: number
+        scoreByStakes:
+          type: object
+          additionalProperties:
+            type: number
+        scoreByPlatform:
+          type: object
+          additionalProperties:
+            type: number
+        scoreTrend:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrendPoint"
+        topDecisions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Decision"
+      required:
+        - winRate
+        - avgScore
+        - scoreByStakes
+        - scoreByPlatform
+        - scoreTrend
+        - topDecisions
+
+    PatternAnalytics:
+      type: object
+      properties:
+        totalPatterns:
+          type: integer
+        patternsByType:
+          type: object
+          additionalProperties:
+            type: integer
+        repeatMistakes:
+          type: integer
+        blindSpots:
+          type: integer
+        recentPatterns:
+          type: array
+          items:
+            $ref: "#/components/schemas/Alert"
+      required:
+        - totalPatterns
+        - patternsByType
+        - repeatMistakes
+        - blindSpots
+        - recentPatterns
+
+    BlindspotAnalytics:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/BlindspotCategory"
+        urgencyBiasCount:
+          type: integer
+        noExternalDataCount:
+          type: integer
+        repeatedFailureCount:
+          type: integer
+      required:
+        - categories
+        - urgencyBiasCount
+        - noExternalDataCount
+        - repeatedFailureCount
+
+    BlindspotCategory:
+      type: object
+      properties:
+        category:
+          type: string
+        count:
+          type: integer
+        avgOutcomeScore:
+          type: number
+        riskLevel:
+          type: string
+          enum: [low, medium, high]
+      required:
+        - category
+        - count
+        - avgOutcomeScore
+        - riskLevel
+
+    TrendPoint:
+      type: object
+      properties:
+        date:
+          type: string
+        value:
+          type: number
+      required:
+        - date
+        - value
+
+    ChatBody:
+      type: object
+      properties:
+        message:
+          type: string
+        conversationHistory:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatMessage"
+      required:
+        - message
+
+    ChatMessage:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+      required:
+        - role
+        - content
+
+    ChatResponse:
+      type: object
+      properties:
+        reply:
+          type: string
+        relevantDecisionIds:
+          type: array
+          items:
+            type: string
+      required:
+        - reply
+        - relevantDecisionIds

@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Decision Brain"
+version = "1.0.0"
+id = "artifacts/decision-brain"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24942
+
+[services.development]
+run = "pnpm --filter @workspace/decision-brain run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/decision-brain", "run", "build" ]
+publicDir = "artifacts/decision-brain/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24942"
+BASE_PATH = "/"
