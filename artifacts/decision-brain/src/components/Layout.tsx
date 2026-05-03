@@ -102,12 +102,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-1">
+      <nav className="flex-1 overflow-y-auto py-2 px-3 space-y-0.5">
         {NAV_SECTIONS.map((section, si) => (
           <div key={section.label}>
             <p className={cn(
-              "text-[9px] font-bold tracking-[0.2em] uppercase px-3 mb-1",
-              si > 0 ? "pt-3" : "pt-1"
+              "text-[9px] font-bold tracking-[0.2em] uppercase px-3 mb-0.5",
+              si > 0 ? "pt-2" : "pt-0.5"
             )} style={{ color: "#383838" }}>
               {section.label}
             </p>
@@ -117,7 +117,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 return (
                   <Link key={item.href} href={item.href} onClick={() => setIsMobileOpen(false)}>
                     <div className={cn(
-                      "flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer transition-all group relative",
+                      "flex items-center gap-2.5 px-3 py-1.5 rounded-xl cursor-pointer transition-all group relative",
                       isActive ? "text-white" : "text-white/35 hover:text-white/70"
                     )}
                       style={isActive ? {
@@ -156,7 +156,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </nav>
 
       {/* User footer */}
-      <div className="px-3 pb-4 space-y-2 border-t pt-3" style={{ borderColor: "#161616" }}>
+      <div className="px-3 pb-3 space-y-1.5 border-t pt-2.5" style={{ borderColor: "#161616" }}>
         <div className="flex items-center gap-3 px-3 py-2 rounded-xl" style={{ background: "#0f0f0f" }}>
           <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 ring-2" style={{ ringColor: "#DC2626" }}>
             {user?.imageUrl ? (
