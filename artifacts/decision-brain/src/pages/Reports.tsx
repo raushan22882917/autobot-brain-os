@@ -14,7 +14,8 @@ const REPORT_TYPES: Record<string, { label: string; desc: string; icon: any; col
 };
 
 export default function Reports() {
-  const { data: reports, isLoading } = useListReports();
+  const { data: rawReports, isLoading } = useListReports();
+  const reports = Array.isArray(rawReports) ? rawReports : [];
   const generateMutation = (useGenerateReport as any)();
   const [open, setOpen] = useState(false);
   const [reportType, setReportType] = useState("board_briefing");
@@ -93,7 +94,7 @@ export default function Reports() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-44 rounded-2xl" style={{ background: "#111" }} />)}
         </div>
-      ) : reports && reports.length > 0 ? (
+      ) : reports.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {reports.map((report: any) => {
             const cfg = REPORT_TYPES[report.reportType] ?? REPORT_TYPES.board_briefing;

@@ -157,8 +157,9 @@ export default function Integrations() {
   }
 
   const ALL_PLATFORMS = ["gmail", "meet", "zoom", "slack", "teams", "notion", "outlook", "docusign"];
+  const integrationsArray = Array.isArray(integrations) ? integrations : [];
   const displayIntegrations = ALL_PLATFORMS.map(platform => {
-    const existing = integrations?.find((i: any) => i.platform === platform);
+    const existing = integrationsArray.find((i: any) => i.platform === platform);
     return existing ?? { platform, status: "disconnected", id: null, lastSyncedAt: null };
   });
   const connectedCount = displayIntegrations.filter((i: any) => i.status === "connected").length;

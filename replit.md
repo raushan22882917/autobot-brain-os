@@ -93,12 +93,25 @@ Full-stack executive decision intelligence platform. pnpm workspace monorepo usi
 
 ## Runtime Safety Patterns
 
-All pages normalize API data before use — API may return null/undefined on empty DB or auth errors:
-- `useListDecisions` → extract `const decisions = response?.decisions ?? []`
-- `useListAlerts` → extract `const alerts = Array.isArray(rawAlerts) ? rawAlerts : []`
-- `useGetPendingOutcomes` → extract `const pendingOutcomes = Array.isArray(raw) ? raw : []`
-- Dashboard analytics fields → normalize each field with `?? 0` before use (avgOutcomeScore, unreadAlerts, etc.)
-- `analytics.categories` in Blindspots → use `analytics.categories?.length ?? 0`
+All pages normalize API data before use — API may return null/undefined on empty DB or auth errors.
+Pattern: `const safeArr = Array.isArray(raw) ? raw : [];`
+
+Fixed pages (applied Array.isArray guard or ?? 0 normalization):
+- `Decisions.tsx` — `response?.decisions ?? []`
+- `Alerts.tsx` — `Array.isArray(rawAlerts)`
+- `Outcomes.tsx` — `Array.isArray(rawPendingOutcomes)`
+- `Integrations.tsx` — `Array.isArray(integrations)`
+- `Reports.tsx` — `Array.isArray(rawReports)`
+- `Dashboard.tsx` — analytics fields each normalized with `?? 0`
+- `Blindspots.tsx` — `analytics.categories?.length ?? 0`
+- `Layout.tsx` — `Array.isArray(alerts)` guard on alert badge count
 - Gemini AI client is optional — all routes guard with `if (!ai) return/throw`
+
+Safe by design (no fix needed):
+- `AdvisorIntel.tsx` — uses `data?.domains ?? []` via useState
+- `LiveFeed.tsx` — uses `useState<Decision[]>([])` with `data.decisions ?? data ?? []`
+- `Inbox.tsx` — uses `useState<Decision[]>([])` with `data.decisions ?? data ?? []`
+- `DecisionDetail.tsx` — `similarDecisions && similarDecisions.length > 0` guard prevents `.map()` on non-array
+- `Patterns.tsx` / `Blindspots.tsx` — `analytics.recentPatterns && analytics.recentPatterns.length > 0` guard
 
 See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
