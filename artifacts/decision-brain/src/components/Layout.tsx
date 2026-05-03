@@ -20,6 +20,11 @@ import {
   GitBranch,
   Radio,
   BarChart2,
+  Inbox,
+  BookOpen,
+  Users,
+  FlameKindling,
+  ScrollText,
 } from "lucide-react";
 import { useState } from "react";
 import { useListAlerts } from "@workspace/api-client-react";
@@ -42,6 +47,16 @@ const NAV_SECTIONS = [
       { href: "/patterns",     label: "Patterns",     icon: Network },
       { href: "/blindspots",   label: "Blind Spots",  icon: EyeOff },
       { href: "/feed",         label: "Live Feed",    icon: Radio, live: true },
+      { href: "/inbox",        label: "Decision Inbox", icon: Inbox, newBadge: true },
+    ],
+  },
+  {
+    label: "Advanced",
+    items: [
+      { href: "/briefing",     label: "Pre-Decision Brief", icon: ScrollText, newBadge: true },
+      { href: "/advisor",      label: "Advisor Intel",      icon: Users,       newBadge: true },
+      { href: "/energy",       label: "Energy Map",         icon: FlameKindling, newBadge: true },
+      { href: "/legacy",       label: "Legacy Report",      icon: BookOpen,    newBadge: true },
     ],
   },
   {
@@ -121,6 +136,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
                           style={{ background: "#DC2626", boxShadow: "0 0 8px rgba(220,38,38,0.6)" }}>
                           {unreadCount}
                         </span>
+                      )}
+                      {(item as any).newBadge && !isActive && (
+                        <span className="text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wide"
+                          style={{ background: "rgba(220,38,38,0.12)", color: "#DC2626", border: "1px solid rgba(220,38,38,0.2)" }}>
+                          New
+                        </span>
+                      )}
+                      {(item as any).live && !isActive && (
+                        <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#22c55e" }} />
                       )}
                       {isActive && <ChevronRight className="w-3 h-3 text-red-500/50" />}
                     </div>

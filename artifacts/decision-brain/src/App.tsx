@@ -27,6 +27,11 @@ import Pricing from "@/pages/Pricing";
 import JiraBoard from "@/pages/JiraBoard";
 import Analytics from "@/pages/Analytics";
 import LiveFeed from "@/pages/LiveFeed";
+import DecisionInbox from "@/pages/Inbox";
+import Briefing from "@/pages/Briefing";
+import AdvisorIntel from "@/pages/AdvisorIntel";
+import EnergyMap from "@/pages/EnergyMap";
+import Legacy from "@/pages/Legacy";
 import NotFound from "@/pages/not-found";
 
 const clerkPubKey = publishableKeyFromHost(
@@ -211,6 +216,12 @@ export default function App() {
               <ProtectedRoute path="/jira" component={JiraBoard} />
               <ProtectedRoute path="/analytics" component={Analytics} />
               <ProtectedRoute path="/feed" component={LiveFeed} />
+              <ProtectedRoute path="/inbox" component={DecisionInbox} />
+              <ProtectedRoute path="/briefing/:id" component={Briefing} />
+              <ProtectedRoute path="/briefing" component={Briefing} />
+              <ProtectedRoute path="/advisor" component={AdvisorIntel} />
+              <ProtectedRoute path="/energy" component={EnergyMap} />
+              <ProtectedRoute path="/legacy" component={Legacy} />
               
               <Route component={NotFound} />
             </Switch>
