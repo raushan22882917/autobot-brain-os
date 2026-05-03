@@ -23,6 +23,8 @@ import Blindspots from "@/pages/Blindspots";
 import Reports from "@/pages/Reports";
 import Chat from "@/pages/Chat";
 import Settings from "@/pages/Settings";
+import Pricing from "@/pages/Pricing";
+import JiraBoard from "@/pages/JiraBoard";
 import NotFound from "@/pages/not-found";
 
 const clerkPubKey = publishableKeyFromHost(
@@ -203,6 +205,8 @@ export default function App() {
               <ProtectedRoute path="/reports" component={Reports} />
               <ProtectedRoute path="/chat" component={Chat} />
               <ProtectedRoute path="/settings" component={Settings} />
+              <ProtectedRoute path="/pricing" component={Pricing} />
+              <ProtectedRoute path="/jira" component={JiraBoard} />
               
               <Route component={NotFound} />
             </Switch>

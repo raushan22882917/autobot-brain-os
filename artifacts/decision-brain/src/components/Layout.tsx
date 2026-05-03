@@ -16,6 +16,8 @@ import {
   X,
   ChevronRight,
   Zap,
+  CreditCard,
+  GitBranch,
 } from "lucide-react";
 import { useState } from "react";
 import { useListAlerts } from "@workspace/api-client-react";
@@ -44,6 +46,8 @@ const NAV_SECTIONS = [
     items: [
       { href: "/integrations", label: "Integrations", icon: Plug },
       { href: "/reports",      label: "Reports",      icon: FileText },
+      { href: "/pricing",      label: "Billing",      icon: CreditCard },
+      { href: "/jira",         label: "Dev Tracker",  icon: GitBranch },
     ],
   },
 ];

@@ -6,3 +6,4 @@ export * from "./integrations";
 export * from "./reports";
 export * from "./conversations";
 export * from "./messages";
+export * from "./subscriptions";

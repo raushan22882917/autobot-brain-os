@@ -9,6 +9,8 @@ import reportsRouter from "./reports";
 import analyticsRouter from "./analytics";
 import chatRouter from "./chat";
 import syncRouter from "./sync";
+import paymentsRouter from "./payments";
+import jiraRouter from "./jira";
 
 const router: IRouter = Router();
 
@@ -22,5 +24,7 @@ router.use("/reports", reportsRouter);
 router.use("/analytics", analyticsRouter);
 router.use("/chat", chatRouter);
 router.use("/sync", syncRouter);
+router.use("/payments", paymentsRouter);
+router.use("/jira", jiraRouter);
 
 export default router;
