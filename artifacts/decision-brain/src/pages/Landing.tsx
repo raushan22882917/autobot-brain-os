@@ -328,7 +328,6 @@ export default function Landing() {
           <div>
             <p className="text-xs font-bold tracking-[0.2em] uppercase mb-4" style={{ color: "#DC2626" }}>Product</p>
             <div className="space-y-3 text-sm text-white/40">
-              <div><Link href="/analytics"><span className="hover:text-white cursor-pointer">Analytics</span></Link></div>
               <div><Link href="/integrations"><span className="hover:text-white cursor-pointer">Integrations</span></Link></div>
               <div><Link href="/billing"><span className="hover:text-white cursor-pointer">Billing</span></Link></div>
               <div><Link href="/about"><span className="hover:text-white cursor-pointer">About</span></Link></div>

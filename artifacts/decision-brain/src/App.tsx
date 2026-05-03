@@ -37,6 +37,9 @@ import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
+import Features from "@/pages/Features";
+import Results from "@/pages/Results";
+import Stories from "@/pages/Stories";
 import NotFound from "@/pages/not-found";
 
 const clerkPubKey = publishableKeyFromHost(
@@ -340,6 +343,9 @@ export default function App() {
               <ProtectedRoute path="/analytics" component={Analytics} />
               <ProtectedRoute path="/about" component={About} />
               <ProtectedRoute path="/contact" component={Contact} />
+              <ProtectedRoute path="/features" component={Features} />
+              <ProtectedRoute path="/results" component={Results} />
+              <ProtectedRoute path="/stories" component={Stories} />
               <ProtectedRoute path="/terms" component={Terms} />
               <ProtectedRoute path="/privacy" component={Privacy} />
               <ProtectedRoute path="/feed" component={LiveFeed} />

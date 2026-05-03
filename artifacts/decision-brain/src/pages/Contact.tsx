@@ -10,7 +10,7 @@ export default function Contact() {
         </div>
         <div className="grid md:grid-cols-3 gap-4">
           {[
-            { icon: Mail, title: "Email", text: "hello@decisionbrain.ai" },
+            { icon: Mail, title: "Email", text: "hello@autobot360.ai" },
             { icon: Phone, title: "Phone", text: "+1 (555) 012-3456" },
             { icon: MapPin, title: "Office", text: "Remote-first, global team" },
           ].map((item) => (
