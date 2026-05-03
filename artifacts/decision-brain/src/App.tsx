@@ -1,6 +1,7 @@
 import { Switch, Route, Router as WouterRouter, Redirect } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ClerkProvider, SignIn, SignUp, Show, useClerk } from "@clerk/react";
+import { Linkedin } from "lucide-react";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
 import { useEffect, useRef } from "react";
@@ -133,12 +134,64 @@ function AuthImagePanel({ side }: { side: "left" | "right" }) {
   );
 }
 
+function SocialAuthButton({ label, href }: { label: string; href: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-[#2a3344] bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+    >
+      <Linkedin className="w-4 h-4 text-[#7ab6ff]" />
+      {label}
+    </a>
+  );
+}
+
 function SignInPage() {
-  return <div className="flex min-h-[100dvh]" style={{ background: "#080808" }}><AuthImagePanel side="left" /><div className="flex flex-1 flex-col items-center justify-center px-6 py-12 relative overflow-hidden"><div className="relative z-10 w-full max-w-md"><div className="mb-6"><p className="text-xs font-bold tracking-[0.2em] uppercase mb-2" style={{ color: "#DC2626" }}>Welcome back</p><h1 className="text-3xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Sign in to your OS</h1></div><SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} /></div></div></div>;
+  return (
+    <div className="flex min-h-[100dvh]" style={{ background: "#080808" }}>
+      <AuthImagePanel side="left" />
+      <div className="flex flex-1 items-center justify-center px-6 py-12 relative overflow-hidden">
+        <div className="relative z-10 w-full max-w-md rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(11,14,20,0.98))] p-8 shadow-2xl">
+          <div className="mb-8 space-y-3">
+            <p className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color: "#DC2626" }}>Welcome back</p>
+            <h1 className="text-4xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Sign in to Autobot360</h1>
+            <p className="text-sm text-white/55 leading-relaxed">Resume your decision OS and keep your team’s context in sync.</p>
+          </div>
+          <div className="space-y-3 mb-6">
+            <SocialAuthButton label="Continue with LinkedIn" href="https://www.linkedin.com" />
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-[#0a0a0a] p-4">
+            <SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function SignUpPage() {
-  return <div className="flex min-h-[100dvh]" style={{ background: "#080808" }}><div className="flex flex-1 flex-col items-center justify-center px-6 py-12 relative overflow-hidden"><div className="relative z-10 w-full max-w-md"><div className="mb-6"><p className="text-xs font-bold tracking-[0.2em] uppercase mb-2" style={{ color: "#DC2626" }}>Get started free</p><h1 className="text-3xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Build your decision OS</h1></div><SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} /></div></div><AuthImagePanel side="right" /></div>;
+  return (
+    <div className="flex min-h-[100dvh]" style={{ background: "#080808" }}>
+      <div className="flex flex-1 items-center justify-center px-6 py-12 relative overflow-hidden">
+        <div className="relative z-10 w-full max-w-md rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(11,14,20,0.98))] p-8 shadow-2xl">
+          <div className="mb-8 space-y-3">
+            <p className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color: "#DC2626" }}>Get started free</p>
+            <h1 className="text-4xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Build your decision OS</h1>
+            <p className="text-sm text-white/55 leading-relaxed">Create your account and connect your first team signals in minutes.</p>
+          </div>
+          <div className="space-y-3 mb-6">
+            <SocialAuthButton label="Sign up with LinkedIn" href="https://www.linkedin.com" />
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-[#0a0a0a] p-4">
+            <SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} />
+          </div>
+        </div>
+      </div>
+      <AuthImagePanel side="right" />
+    </div>
+  );
 }
 
 function ClerkQueryClientCacheInvalidator() {
