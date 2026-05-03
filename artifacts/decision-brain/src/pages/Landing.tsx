@@ -153,71 +153,16 @@ export default function Landing() {
               </p>
             </motion.div>
 
-            {/* Hero visual — dashboard mockup card */}
+            {/* Hero visual — animated image */}
             <motion.div custom={2} variants={fadeUp} initial="hidden" animate="show" className="hidden md:block">
-              <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
-                style={{ background: "rgba(15,15,15,0.9)", backdropFilter: "blur(20px)" }}>
-                {/* Top bar */}
-                <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/8"
-                  style={{ background: "rgba(30,30,30,0.8)" }}>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{ background: "#DC2626" }} />
-                    <div className="w-3 h-3 rounded-full bg-white/20" />
-                    <div className="w-3 h-3 rounded-full bg-white/20" />
-                  </div>
-                  <span className="text-xs text-white/40 font-mono">Decision Brain OS</span>
-                  <div className="w-16" />
-                </div>
-
-                <div className="p-5 space-y-3">
-                  {/* Alert item */}
-                  <div className="flex items-start gap-3 p-3.5 rounded-xl border" style={{ borderColor: "rgba(220,38,38,0.25)", background: "rgba(220,38,38,0.06)" }}>
-                    <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: "#F87171" }} />
-                    <div>
-                      <p className="text-xs font-semibold text-white mb-0.5">Urgency Bias Detected</p>
-                      <p className="text-xs text-white/50">4 of your last 6 decisions were made under time pressure — accuracy rate drops 31% in this mode.</p>
-                    </div>
-                  </div>
-
-                  {/* Stat row */}
-                  <div className="grid grid-cols-3 gap-3">
-                    {[
-                      { label: "Decisions", val: "247", delta: "+12" },
-                      { label: "Accuracy", val: "91%", delta: "+4%" },
-                      { label: "Open Risks", val: "3", delta: "-2" },
-                    ].map(s => (
-                      <div key={s.label} className="p-3 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.04)" }}>
-                        <p className="text-lg font-bold text-white">{s.val}</p>
-                        <p className="text-[10px] text-white/40">{s.label}</p>
-                        <p className="text-[10px] mt-0.5" style={{ color: "#4ADE80" }}>{s.delta}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Recent decisions */}
-                  {[
-                    { title: "Expand to APAC Q3", status: "On Track", color: "#4ADE80" },
-                    { title: "Hire VP Engineering", status: "Delayed", color: "#FBBF24" },
-                    { title: "Sunset Legacy Platform", status: "At Risk", color: "#F87171" },
-                  ].map(d => (
-                    <div key={d.title} className="flex items-center justify-between px-3.5 py-2.5 rounded-lg" style={{ background: "rgba(255,255,255,0.03)" }}>
-                      <p className="text-xs text-white/80">{d.title}</p>
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ color: d.color, background: `${d.color}18` }}>{d.status}</span>
-                    </div>
-                  ))}
-                </div>
+              <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                <img
+                  src="/images/second-brain-animated.png"
+                  alt="How Decision Brain works for founders"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </motion.div>
-          </div>
-        </section>
-
-        <section className="px-6 md:px-10 pt-6">
-          <div className="max-w-7xl mx-auto rounded-3xl overflow-hidden border border-white/10 bg-[#0d0d0d]">
-            <img
-              src="/images/second-brain-animated.png"
-              alt="How Decision Brain works for founders"
-              className="w-full h-auto object-cover"
-            />
           </div>
         </section>
 
