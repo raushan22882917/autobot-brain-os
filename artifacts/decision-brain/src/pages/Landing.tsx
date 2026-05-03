@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { BrainCircuit, Shield, Zap, Target, ChevronRight, Network, ArrowRight, TrendingUp, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
+import heroImage from "@assets/Screenshot_2026-05-03_at_16.12.21_1777804951712.png";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -157,9 +158,9 @@ export default function Landing() {
             <motion.div custom={2} variants={fadeUp} initial="hidden" animate="show" className="hidden md:block">
               <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#0b0b0b]">
                 <img
-                  src="@assets/Screenshot_2026-05-03_at_16.11.04_1777804875002.png"
+                  src={heroImage}
                   alt="How Decision Brain works for founders"
-                  className="w-full h-full object-cover"
+                  className="block w-full h-full object-cover"
                 />
               </div>
             </motion.div>
