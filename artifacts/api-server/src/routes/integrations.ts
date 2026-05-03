@@ -178,7 +178,27 @@ router.get("/google/callback", async (req: any, res) => {
 
     if (!tokenRes.ok || tokens.error) {
       req.log.error({ tokens }, "Google token exchange failed");
-      return res.redirect("/?integration_error=token_exchange_failed");
+      return res.redirect("/integrations?integration_error=token_exchange_failed");
+    }
+
+    // Fetch user email from Google so we can upsert the user row
+    let userEmail = "";
+    try {
+      const userinfoRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+        headers: { Authorization: `Bearer ${tokens.access_token}` },
+      });
+      const userinfo = (await userinfoRes.json()) as any;
+      userEmail = userinfo.email ?? "";
+    } catch {
+      // non-fatal — we'll store an empty email placeholder
+    }
+
+    // Ensure the user row exists (callback bypasses requireAuth middleware)
+    if (userEmail) {
+      await db
+        .insert(usersTable)
+        .values({ id: userId, email: userEmail })
+        .onConflictDoNothing();
     }
 
     // Persist tokens in DB
@@ -206,7 +226,7 @@ router.get("/google/callback", async (req: any, res) => {
     return res.redirect(`/integrations?connected=${platform}`);
   } catch (err: any) {
     req.log.error({ err }, "Google OAuth callback error");
-    return res.redirect("/?integration_error=callback_failed");
+    return res.redirect("/integrations?integration_error=callback_failed");
   }
 });
 
