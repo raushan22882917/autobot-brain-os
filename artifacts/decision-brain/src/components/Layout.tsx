@@ -24,6 +24,7 @@ import {
   Users,
   FlameKindling,
   ScrollText,
+  Shield,
 } from "lucide-react";
 import { useState } from "react";
 import { useListAlerts } from "@workspace/api-client-react";
@@ -66,6 +67,7 @@ const NAV_SECTIONS = [
       { href: "/analytics",    label: "Analytics",    icon: BarChart2 },
       { href: "/reports",      label: "Reports",      icon: FileText },
       { href: "/billing",      label: "Billing",      icon: CreditCard },
+      { href: "/admin",        label: "Admin Panel",  icon: Shield, adminOnly: true },
     ],
   },
 ];
@@ -81,6 +83,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const unreadCount = alertsArray.filter((a: any) => a.isRead === false).length || 0;
 
   const handleSignOut = () => signOut({ redirectUrl: "/" });
+
+  const ADMIN_EMAILS = ["admin@autobot360.com", "founder@autobot360.com"];
+  const isAdmin = ADMIN_EMAILS.includes(user?.primaryEmailAddress?.emailAddress || "");
 
   const now = new Date();
   const dateStr = now.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
@@ -110,7 +115,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               {section.label}
             </p>
             <div className="space-y-0.5">
-              {section.items.map((item) => {
+              {section.items.filter(item => !(item as any).adminOnly || isAdmin).map((item) => {
                 const isActive = location === item.href || location.startsWith(`${item.href}/`);
                 return (
                   <Link key={item.href} href={item.href} onClick={() => setIsMobileOpen(false)}>

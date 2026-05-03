@@ -42,6 +42,7 @@ import Results from "@/pages/Results";
 import Stories from "@/pages/Stories";
 import Product from "@/pages/Product";
 import IntegrationsPublic from "@/pages/IntegrationsPublic";
+import Admin from "@/pages/Admin";
 import NotFound from "@/pages/not-found";
 
 const clerkPubKey = publishableKeyFromHost(window.location.hostname, import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
@@ -252,6 +253,7 @@ export default function App() {
               <ProtectedRoute path="/features" component={Features} />
               <ProtectedRoute path="/results" component={Results} />
               <ProtectedRoute path="/stories" component={Stories} />
+              <ProtectedRoute path="/admin" component={Admin} />
               <Route path="/terms" component={Terms} />
               <Route path="/privacy" component={Privacy} />
               <ProtectedRoute path="/feed" component={LiveFeed} />
