@@ -20,7 +20,8 @@ function daysUntil(dateStr: string) {
 }
 
 export default function Outcomes() {
-  const { data: pendingOutcomes, isLoading } = useGetPendingOutcomes();
+  const { data: rawPendingOutcomes, isLoading } = useGetPendingOutcomes();
+  const pendingOutcomes = Array.isArray(rawPendingOutcomes) ? rawPendingOutcomes : [];
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">

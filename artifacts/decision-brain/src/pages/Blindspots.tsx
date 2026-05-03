@@ -108,7 +108,7 @@ export default function Blindspots() {
         </Card>
       )}
 
-      {analytics.categories.length > 0 && (
+      {(analytics.categories?.length ?? 0) > 0 && (
         <>
           <h2 className="text-xl font-bold text-white">Vulnerability Categories</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -140,7 +140,7 @@ export default function Blindspots() {
         </>
       )}
 
-      {analytics.categories.length === 0 && !aiBlindSpots?.length && (
+      {(analytics.categories?.length ?? 0) === 0 && !aiBlindSpots?.length && (
         <Card className="bg-card border-border">
           <CardContent className="py-12 text-center">
             <EyeOff className="w-10 h-10 text-muted-foreground mx-auto mb-3" />

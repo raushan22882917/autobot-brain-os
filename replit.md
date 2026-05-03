@@ -91,4 +91,14 @@ Full-stack executive decision intelligence platform. pnpm workspace monorepo usi
 - `lib/api-zod/src/index.ts` must only contain: `export * from "./generated/api";` (codegen script enforces this)
 - Do NOT add leaf workspace packages to root tsconfig.json references
 
+## Runtime Safety Patterns
+
+All pages normalize API data before use — API may return null/undefined on empty DB or auth errors:
+- `useListDecisions` → extract `const decisions = response?.decisions ?? []`
+- `useListAlerts` → extract `const alerts = Array.isArray(rawAlerts) ? rawAlerts : []`
+- `useGetPendingOutcomes` → extract `const pendingOutcomes = Array.isArray(raw) ? raw : []`
+- Dashboard analytics fields → normalize each field with `?? 0` before use (avgOutcomeScore, unreadAlerts, etc.)
+- `analytics.categories` in Blindspots → use `analytics.categories?.length ?? 0`
+- Gemini AI client is optional — all routes guard with `if (!ai) return/throw`
+
 See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.

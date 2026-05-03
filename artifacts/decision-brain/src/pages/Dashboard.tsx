@@ -108,13 +108,22 @@ export default function Dashboard() {
 
   if (!analytics) return null;
 
-  const stakesData = Object.entries(analytics.decisionsByStakes && typeof analytics.decisionsByStakes === 'object' ? analytics.decisionsByStakes : {})
-    .map(([name, value]) => ({ name, value }))
+  const avgOutcomeScore = analytics.avgOutcomeScore ?? 0;
+  const unreadAlerts = analytics.unreadAlerts ?? 0;
+  const totalDecisions = analytics.totalDecisions ?? 0;
+  const decisionsThisMonth = analytics.decisionsThisMonth ?? 0;
+  const pendingOutcomes = analytics.pendingOutcomes ?? 0;
+  const decisionsByStakes = (analytics.decisionsByStakes && typeof analytics.decisionsByStakes === 'object')
+    ? analytics.decisionsByStakes as Record<string, number>
+    : {} as Record<string, number>;
+
+  const stakesData = Object.entries(decisionsByStakes)
+    .map(([name, value]) => ({ name, value: value ?? 0 }))
     .filter(d => d.value > 0);
 
   const healthScore = Math.min(100, Math.max(0, Math.round(
-    (analytics.avgOutcomeScore * 0.6) +
-    (Math.max(0, 100 - analytics.unreadAlerts * 10) * 0.4)
+    (avgOutcomeScore * 0.6) +
+    (Math.max(0, 100 - unreadAlerts * 10) * 0.4)
   )));
 
   const healthColor = healthScore >= 70 ? "#22c55e" : healthScore >= 45 ? "#f59e0b" : "#DC2626";
@@ -159,14 +168,14 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {analytics.unreadAlerts > 0 && (
+            {unreadAlerts > 0 && (
               <Link href="/alerts">
                 <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl cursor-pointer transition-all hover:scale-105"
                   style={{ background: "rgba(220,38,38,0.12)", border: "1px solid rgba(220,38,38,0.25)" }}>
                   <AlertTriangle className="w-5 h-5" style={{ color: "#f87171" }} />
                   <div>
-                    <p className="text-xl font-bold" style={{ color: "#f87171" }}>{analytics.unreadAlerts}</p>
-                    <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "#DC2626" }}>Alert{analytics.unreadAlerts > 1 ? "s" : ""}</p>
+                    <p className="text-xl font-bold" style={{ color: "#f87171" }}>{unreadAlerts}</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "#DC2626" }}>Alert{unreadAlerts > 1 ? "s" : ""}</p>
                   </div>
                 </div>
               </Link>
@@ -179,33 +188,33 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           label="Total Decisions"
-          value={analytics.totalDecisions}
-          sub={`${analytics.decisionsThisMonth} logged this month`}
+          value={totalDecisions}
+          sub={`${decisionsThisMonth} logged this month`}
           icon={BrainCircuit}
-          trend={`+${analytics.decisionsThisMonth}`}
+          trend={`+${decisionsThisMonth}`}
           trendUp={true}
         />
         <StatCard
           label="Avg Outcome Score"
-          value={`${analytics.avgOutcomeScore.toFixed(0)}`}
+          value={`${avgOutcomeScore.toFixed(0)}`}
           sub="Out of 100 possible"
           icon={TrendingUp}
           accent="#a3a3a3"
-          trend={analytics.avgOutcomeScore >= 60 ? "Above avg" : "Below avg"}
-          trendUp={analytics.avgOutcomeScore >= 60}
+          trend={avgOutcomeScore >= 60 ? "Above avg" : "Below avg"}
+          trendUp={avgOutcomeScore >= 60}
         />
         <StatCard
           label="Active Alerts"
-          value={analytics.unreadAlerts}
+          value={unreadAlerts}
           sub="Blind spots & patterns"
           icon={AlertTriangle}
-          glow={analytics.unreadAlerts > 0}
-          trend={analytics.unreadAlerts > 0 ? "Action needed" : "All clear"}
-          trendUp={analytics.unreadAlerts === 0}
+          glow={unreadAlerts > 0}
+          trend={unreadAlerts > 0 ? "Action needed" : "All clear"}
+          trendUp={unreadAlerts === 0}
         />
         <StatCard
           label="Pending Review"
-          value={analytics.pendingOutcomes}
+          value={pendingOutcomes}
           sub="Outcomes awaiting input"
           icon={Activity}
           accent="#a3a3a3"
@@ -278,7 +287,7 @@ export default function Dashboard() {
               </div>
               <div className="space-y-2.5">
                 {stakesData.map((entry) => {
-                  const pct = analytics.totalDecisions ? Math.round((entry.value / analytics.totalDecisions) * 100) : 0;
+                  const pct = totalDecisions ? Math.round((entry.value / totalDecisions) * 100) : 0;
                   return (
                     <div key={entry.name}>
                       <div className="flex items-center justify-between mb-1">
@@ -313,7 +322,7 @@ export default function Dashboard() {
         {[
           {
             label: "High Stakes",
-            value: (analytics.decisionsByStakes as any)?.high ?? 0,
+            value: decisionsByStakes?.high ?? 0,
             desc: "Significant consequence decisions",
             color: "#b45309",
             icon: AlertTriangle,
@@ -321,7 +330,7 @@ export default function Dashboard() {
           },
           {
             label: "Critical",
-            value: (analytics.decisionsByStakes as any)?.critical ?? 0,
+            value: decisionsByStakes?.critical ?? 0,
             desc: "Irreversible or existential decisions",
             color: RED,
             icon: Zap,
@@ -329,7 +338,7 @@ export default function Dashboard() {
           },
           {
             label: "Reviewed",
-            value: analytics.totalDecisions - analytics.pendingOutcomes,
+            value: totalDecisions - pendingOutcomes,
             desc: "Decisions with outcome tracking",
             color: "#22c55e",
             icon: Target,
@@ -358,7 +367,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
           { label: "Log a Decision",     href: "/decisions",    desc: "Manual entry",       color: RED },
-          { label: "View Alerts",        href: "/alerts",       desc: `${analytics.unreadAlerts} unread`, color: "#f59e0b" },
+          { label: "View Alerts",        href: "/alerts",       desc: `${unreadAlerts} unread`, color: "#f59e0b" },
           { label: "Ask AI Advisor",     href: "/chat",         desc: "Get recommendations", color: "#a78bfa" },
           { label: "Sync Accounts",      href: "/integrations", desc: "Gmail & Meet",        color: "#22c55e" },
         ].map((action) => (

@@ -29,7 +29,8 @@ function timeAgo(dateStr: string) {
 
 export default function Alerts() {
   const [showRead, setShowRead] = useState(false);
-  const { data: alerts, isLoading } = useListAlerts({ unread: !showRead });
+  const { data: rawAlerts, isLoading } = useListAlerts({ unread: !showRead });
+  const alerts = Array.isArray(rawAlerts) ? rawAlerts : [];
   const markReadMutation = (useMarkAlertRead as any)();
 
   const handleMarkRead = (id: string, e: React.MouseEvent) => {
@@ -42,7 +43,7 @@ export default function Alerts() {
     });
   };
 
-  const unreadCount = !showRead ? alerts?.length || 0 : 0;
+  const unreadCount = !showRead ? alerts.length : 0;
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">

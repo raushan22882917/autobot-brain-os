@@ -50,6 +50,7 @@ export default function Decisions() {
     stakes: stakesFilter === "all" ? undefined : stakesFilter as any,
     limit: 50,
   });
+  const decisions = response?.decisions ?? [];
   const createMutation = (useCreateDecision as any)();
 
   const addTag = () => {
@@ -193,11 +194,12 @@ export default function Decisions() {
             <SelectItem value="low">Low</SelectItem>
           </SelectContent>
         </Select>
-        {response?.decisions && (
+        {decisions.length > 0 && (
           <span className="text-xs font-semibold ml-auto" style={{ color: "#333" }}>
-            {response.decisions.length} record{response.decisions.length !== 1 ? "s" : ""}
+            {decisions.length} record{decisions.length !== 1 ? "s" : ""}
           </span>
         )}
+
       </div>
 
       {/* List */}
@@ -207,7 +209,7 @@ export default function Decisions() {
         </div>
       ) : (
         <div className="space-y-2">
-          {response?.decisions.map((decision: any) => {
+          {decisions.map((decision: any) => {
             const sc = STAKES_CONFIG[decision.stakes] ?? STAKES_CONFIG.medium;
             return (
               <Link key={decision.id} href={`/decisions/${decision.id}`}>
@@ -268,7 +270,7 @@ export default function Decisions() {
             );
           })}
 
-          {response?.decisions.length === 0 && (
+          {decisions.length === 0 && (
             <div className="flex flex-col items-center justify-center py-24 rounded-2xl border text-center"
               style={{ background: "#0a0a0a", borderColor: "#141414" }}>
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
