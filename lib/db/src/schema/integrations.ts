@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, uniqueIndex } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { usersTable } from "./users";
@@ -16,7 +16,9 @@ export const integrationsTable = pgTable("integrations", {
   scope: text("scope").array(),
   lastSyncedAt: timestamp("last_synced_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-});
+}, (table) => [
+  uniqueIndex("integrations_user_id_platform_unique").on(table.userId, table.platform),
+]);
 
 export const insertIntegrationSchema = createInsertSchema(integrationsTable).omit({
   id: true,
