@@ -38,7 +38,7 @@ export default function Pricing() {
 
   const handleSubscribe = async (planId: string) => {
     if (planId === "free") return;
-    if (planId === "enterprise") { toast({ title: "Enterprise Sales", description: "Our team will reach out within 24 hours. Email: enterprise@decisionbrain.ai" }); return; }
+    if (planId === "enterprise") { toast({ title: "Enterprise Sales", description: "Our team will reach out within 24 hours. Email: enterprise@autobot360.ai" }); return; }
     setLoadingPlan(planId);
     try {
       const res = await fetch(apiUrl("/payments/create-order"), { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include", body: JSON.stringify({ plan: planId }) });
