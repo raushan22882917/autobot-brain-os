@@ -4,6 +4,8 @@ import { db, integrationsTable, usersTable } from "@workspace/db";
 import { eq, and } from "drizzle-orm";
 
 const router = Router();
+const appBasePath = process.env.APP_BASE_PATH ?? "";
+const integrationsPath = `${appBasePath}/integrations`;
 
 const PLATFORMS = ["gmail", "zoom", "slack", "meet", "teams", "outlook", "notion", "docusign"];
 
@@ -135,11 +137,11 @@ router.get("/google/callback", async (req: any, res) => {
 
   if (error) {
     req.log.warn({ error }, "Google OAuth denied");
-    return res.redirect("/integrations?integration_error=access_denied");
+    return res.redirect(`${integrationsPath}?integration_error=access_denied`);
   }
 
   if (!code || !state) {
-    return res.redirect("/integrations?integration_error=missing_params");
+    return res.redirect(`${integrationsPath}?integration_error=missing_params`);
   }
 
   let userId: string;
@@ -149,13 +151,13 @@ router.get("/google/callback", async (req: any, res) => {
     userId = decoded.userId;
     platform = decoded.platform;
   } catch {
-    return res.redirect("/integrations?integration_error=invalid_state");
+    return res.redirect(`${integrationsPath}?integration_error=invalid_state`);
   }
 
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
   if (!clientId || !clientSecret) {
-    return res.redirect("/integrations?integration_error=not_configured");
+    return res.redirect(`${integrationsPath}?integration_error=not_configured`);
   }
 
   try {
@@ -178,7 +180,7 @@ router.get("/google/callback", async (req: any, res) => {
 
     if (!tokenRes.ok || tokens.error) {
       req.log.error({ tokens }, "Google token exchange failed");
-      return res.redirect("/integrations?integration_error=token_exchange_failed");
+      return res.redirect(`${integrationsPath}?integration_error=token_exchange_failed`);
     }
 
     // Fetch user email from Google so we can upsert the user row
@@ -223,10 +225,10 @@ router.get("/google/callback", async (req: any, res) => {
       });
 
     // Redirect back to integrations page with success flag
-    return res.redirect(`/integrations?connected=${platform}`);
+    return res.redirect(`${integrationsPath}?connected=${platform}`);
   } catch (err: any) {
     req.log.error({ err }, "Google OAuth callback error");
-    return res.redirect("/integrations?integration_error=callback_failed");
+    return res.redirect(`${integrationsPath}?integration_error=callback_failed`);
   }
 });
 
