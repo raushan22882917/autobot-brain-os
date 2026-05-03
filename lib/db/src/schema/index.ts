@@ -4,3 +4,5 @@ export * from "./outcomes";
 export * from "./alerts";
 export * from "./integrations";
 export * from "./reports";
+export * from "./conversations";
+export * from "./messages";

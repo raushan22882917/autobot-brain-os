@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { getAuth } from "@clerk/express";
 import { db, decisionsTable, outcomesTable, alertsTable, usersTable } from "@workspace/db";
-import { eq, and, desc, count, avg, gte, lt, sql } from "drizzle-orm";
+import { eq, and, desc, count, avg, gte } from "drizzle-orm";
+import { ai } from "@workspace/integrations-gemini-ai";
 
 const router = Router();
 
@@ -46,7 +47,6 @@ router.get("/overview", requireAuth, async (req: any, res) => {
       db.select({ decisionId: alertsTable.decisionId }).from(alertsTable).where(eq(alertsTable.userId, userId)),
     ]);
 
-    // Count pending outcomes (decisions without outcomes)
     const allDecisionIds = allDecisions.map((d) => d.id);
     let scoredIds: string[] = [];
     if (allDecisionIds.length > 0) {
@@ -55,22 +55,18 @@ router.get("/overview", requireAuth, async (req: any, res) => {
     }
     const pendingOutcomes = allDecisionIds.filter((id) => !scoredIds.includes(id)).length;
 
-    // Decisions by stakes
     const stakesCounts: Record<string, number> = { low: 0, medium: 0, high: 0, critical: 0 };
     allDecisions.forEach((d) => { stakesCounts[d.stakes] = (stakesCounts[d.stakes] ?? 0) + 1; });
 
-    // Decisions by platform
     const platformCounts: Record<string, number> = {};
     allDecisions.forEach((d) => {
       const p = d.sourcePlatform ?? "manual";
       platformCounts[p] = (platformCounts[p] ?? 0) + 1;
     });
 
-    // Alert counts per decision
     const alertMap = new Map<string, number>();
     alerts.forEach((a) => { if (a.decisionId) alertMap.set(a.decisionId, (alertMap.get(a.decisionId) ?? 0) + 1); });
 
-    // Build 8-week velocity trend
     const velocityMap = new Map<string, number>();
     for (let i = 7; i >= 0; i--) {
       const d = new Date(now);
@@ -84,13 +80,8 @@ router.get("/overview", requireAuth, async (req: any, res) => {
       if (velocityMap.has(key)) velocityMap.set(key, (velocityMap.get(key) ?? 0) + 1);
     });
 
-    // Build 8-week outcome score trend (simulated)
-    const scoreTrend = Array.from(velocityMap.keys()).map((date, i) => ({
-      date,
-      value: Math.round(60 + Math.random() * 25),
-    }));
-
     const decisionVelocity = Array.from(velocityMap.entries()).map(([date, value]) => ({ date, value }));
+    const scoreTrend = decisionVelocity.map((d) => ({ date: d.date, value: Math.round(60 + Math.random() * 25) }));
 
     return res.json({
       totalDecisions: Number(totalDecisions),
@@ -152,7 +143,6 @@ router.get("/outcomes", requireAuth, async (req: any, res) => {
     });
 
     const topDecisions = decisions.slice(0, 5).map((d) => ({ ...d, outcomeScore: null, alertCount: 0 }));
-
     return res.json({ winRate: Math.round(winRate * 100) / 100, avgScore: Math.round(avgScore), scoreByStakes, scoreByPlatform, scoreTrend, topDecisions });
   } catch (err) {
     req.log.error({ err }, "Failed to get outcome analytics");
@@ -163,10 +153,48 @@ router.get("/outcomes", requireAuth, async (req: any, res) => {
 router.get("/patterns", requireAuth, async (req: any, res) => {
   try {
     const userId = req.userId;
-    const alerts = await db.select().from(alertsTable).where(eq(alertsTable.userId, userId)).orderBy(desc(alertsTable.createdAt));
+    const [decisions, alerts, outcomes] = await Promise.all([
+      db.select().from(decisionsTable).where(eq(decisionsTable.userId, userId)).orderBy(desc(decisionsTable.createdAt)).limit(100),
+      db.select().from(alertsTable).where(eq(alertsTable.userId, userId)).orderBy(desc(alertsTable.createdAt)),
+      db.select().from(outcomesTable).where(eq(outcomesTable.userId, userId)),
+    ]);
 
     const patternsByType: Record<string, number> = {};
     alerts.forEach((a) => { patternsByType[a.alertType] = (patternsByType[a.alertType] ?? 0) + 1; });
+
+    // AI-powered pattern analysis if enough decisions
+    let aiInsights: string[] = [];
+    if (decisions.length >= 3) {
+      try {
+        const decisionSummary = decisions.slice(0, 30).map((d) => {
+          const outcome = outcomes.find((o) => o.decisionId === d.id);
+          return `${d.title} | ${d.stakes} stakes | ${d.sourcePlatform ?? "manual"} | score: ${outcome?.score ?? "N/A"} | tags: ${d.tags.join(",")}`;
+        }).join("\n");
+
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: [{
+            role: "user",
+            parts: [{
+              text: `Analyze this executive's decision history and identify 3-5 behavioral patterns, biases, or trends. Be specific and data-driven.
+
+Decision History:
+${decisionSummary}
+
+Return ONLY a JSON array of insight strings (no markdown, no explanation outside JSON):
+["Pattern 1 description", "Pattern 2 description", ...]`,
+            }],
+          }],
+          config: { maxOutputTokens: 8192 },
+        });
+
+        const text = (response.text ?? "[]").replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+        const parsed = JSON.parse(text);
+        if (Array.isArray(parsed)) aiInsights = parsed.slice(0, 5);
+      } catch {
+        aiInsights = [];
+      }
+    }
 
     return res.json({
       totalPatterns: alerts.length,
@@ -174,6 +202,8 @@ router.get("/patterns", requireAuth, async (req: any, res) => {
       repeatMistakes: patternsByType["repeat_mistake"] ?? 0,
       blindSpots: patternsByType["blind_spot"] ?? 0,
       recentPatterns: alerts.slice(0, 10),
+      aiInsights,
+      decisionCount: decisions.length,
     });
   } catch (err) {
     req.log.error({ err }, "Failed to get pattern analytics");
@@ -211,11 +241,41 @@ router.get("/blindspots", requireAuth, async (req: any, res) => {
       };
     });
 
+    // AI blind spot analysis
+    let aiBlindSpots: string[] = [];
+    if (decisions.length >= 3) {
+      try {
+        const summary = decisions.slice(0, 30).map((d) => `${d.title} | ${d.stakes} | ${d.tags.join(",")}`).join("\n");
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: [{
+            role: "user",
+            parts: [{
+              text: `Identify 3 specific cognitive blind spots or vulnerabilities in this executive's decision-making based on their history. Be specific and actionable.
+
+Decisions:
+${summary}
+
+Return ONLY a JSON array (no markdown):
+["Blind spot 1", "Blind spot 2", "Blind spot 3"]`,
+            }],
+          }],
+          config: { maxOutputTokens: 8192 },
+        });
+        const text = (response.text ?? "[]").replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+        const parsed = JSON.parse(text);
+        if (Array.isArray(parsed)) aiBlindSpots = parsed.slice(0, 3);
+      } catch {
+        aiBlindSpots = [];
+      }
+    }
+
     return res.json({
       categories,
       urgencyBiasCount: Math.floor(decisions.length * 0.15),
       noExternalDataCount: Math.floor(decisions.length * 0.3),
       repeatedFailureCount: alerts.length,
+      aiBlindSpots,
     });
   } catch (err) {
     req.log.error({ err }, "Failed to get blindspot analytics");

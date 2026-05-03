@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { SiGmail, SiZoom, SiSlack, SiNotion } from "react-icons/si";
-import { Mail, RefreshCw, FileSignature, Video, Users, ExternalLink, CheckCircle2, Loader2 } from "lucide-react";
+import { Mail, RefreshCw, FileSignature, Video, Users, ExternalLink, CheckCircle2, Loader2, Zap } from "lucide-react";
 
 const GOOGLE_PLATFORMS = ["gmail", "meet"];
 
@@ -23,6 +23,8 @@ const PLATFORM_META: Record<string, { name: string; desc: string }> = {
   outlook:  { name: "Outlook",           desc: "Capture decisions and commitments from Outlook email." },
   docusign: { name: "DocuSign",          desc: "Track signed agreements and contractual decisions." },
 };
+
+const SYNC_PLATFORMS: Record<string, string> = { gmail: "gmail", meet: "meet" };
 
 const GoogleIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24">
@@ -39,6 +41,7 @@ export default function Integrations() {
   const { data: integrations, isLoading, refetch } = useListIntegrations();
   const disconnectMutation = useDisconnectIntegration();
   const [connectingPlatform, setConnectingPlatform] = useState<string | null>(null);
+  const [syncingPlatform, setSyncingPlatform] = useState<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -50,7 +53,7 @@ export default function Integrations() {
       window.history.replaceState({}, "", window.location.pathname);
       queryClient.invalidateQueries({ queryKey: getListIntegrationsQueryKey() });
       refetch();
-      toast({ title: `${name} connected`, description: "Your account has been linked successfully." });
+      toast({ title: `${name} connected`, description: "Your account has been linked. Click Sync Now to pull your data." });
     }
     if (integrationError) {
       const messages: Record<string, string> = {
@@ -62,11 +65,7 @@ export default function Integrations() {
         callback_failed: "An unexpected error occurred. Please try again.",
       };
       window.history.replaceState({}, "", window.location.pathname);
-      toast({
-        title: "Connection failed",
-        description: messages[integrationError] ?? "An error occurred.",
-        variant: "destructive",
-      });
+      toast({ title: "Connection failed", description: messages[integrationError] ?? "An error occurred.", variant: "destructive" });
     }
   }, [location]);
 
@@ -92,10 +91,7 @@ export default function Integrations() {
   const handleSimpleConnect = async (platform: string) => {
     setConnectingPlatform(platform);
     try {
-      const res = await fetch(`/api/integrations/${platform}/connect`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const res = await fetch(`/api/integrations/${platform}/connect`, { method: "POST", credentials: "include" });
       if (res.ok) {
         await queryClient.invalidateQueries({ queryKey: getListIntegrationsQueryKey() });
         await refetch();
@@ -105,9 +101,33 @@ export default function Integrations() {
         toast({ title: "Connection failed", description: "Please try again.", variant: "destructive" });
       }
     } catch {
-      toast({ title: "Connection failed", description: "Network error. Please try again.", variant: "destructive" });
+      toast({ title: "Connection failed", description: "Network error.", variant: "destructive" });
     } finally {
       setConnectingPlatform(null);
+    }
+  };
+
+  const handleSync = async (platform: string) => {
+    const syncKey = SYNC_PLATFORMS[platform];
+    if (!syncKey) return;
+    setSyncingPlatform(platform);
+    try {
+      const res = await fetch(`/api/sync/${syncKey}`, { method: "POST", credentials: "include" });
+      const data = await res.json() as any;
+      if (res.ok) {
+        await refetch();
+        if (data.synced > 0) {
+          toast({ title: `Sync complete`, description: `${data.synced} decision${data.synced !== 1 ? "s" : ""} extracted and added to your log.` });
+        } else {
+          toast({ title: "Sync complete", description: "No new decisions found in recent activity." });
+        }
+      } else {
+        toast({ title: "Sync failed", description: data.error ?? "Please try again.", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Sync failed", description: "Network error.", variant: "destructive" });
+    } finally {
+      setSyncingPlatform(null);
     }
   };
 
@@ -120,7 +140,7 @@ export default function Integrations() {
         toast({ title: `${name} disconnected`, description: "Integration removed." });
       },
       onError: () => {
-        toast({ title: "Error", description: "Failed to disconnect. Please try again.", variant: "destructive" });
+        toast({ title: "Error", description: "Failed to disconnect.", variant: "destructive" });
       },
     });
   };
@@ -139,13 +159,12 @@ export default function Integrations() {
   const ALL_PLATFORMS = ["gmail", "meet", "zoom", "slack", "teams", "notion", "outlook", "docusign"];
   const displayIntegrations = ALL_PLATFORMS.map(platform => {
     const existing = integrations?.find((i: any) => i.platform === platform);
-    return existing ?? { platform, status: "disconnected", id: null };
+    return existing ?? { platform, status: "disconnected", id: null, lastSyncedAt: null };
   });
   const connectedCount = displayIntegrations.filter((i: any) => i.status === "connected").length;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-serif font-bold text-white tracking-tight">Intelligence Sources</h1>
@@ -157,13 +176,14 @@ export default function Integrations() {
         </div>
       </div>
 
-      {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {displayIntegrations.map((integration: any) => {
           const isConnected = integration.status === "connected";
           const isGoogle = GOOGLE_PLATFORMS.includes(integration.platform);
-          const meta = PLATFORM_META[integration.platform] ?? { name: integration.platform, desc: "" };
+          const canSync = isConnected && SYNC_PLATFORMS[integration.platform];
+          const isSyncing = syncingPlatform === integration.platform;
           const isConnecting = connectingPlatform === integration.platform;
+          const meta = PLATFORM_META[integration.platform] ?? { name: integration.platform, desc: "" };
 
           return (
             <Card
@@ -199,16 +219,27 @@ export default function Integrations() {
                 <CardTitle className="text-xl font-bold text-white mb-1">{meta.name}</CardTitle>
                 <CardDescription className="text-sm leading-relaxed">{meta.desc}</CardDescription>
 
-                <div className="mt-auto pt-6 flex items-center justify-between">
-                  {isConnected && integration.lastSyncedAt && (
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <RefreshCw className="w-3 h-3" />
-                      {new Date(integration.lastSyncedAt).toLocaleDateString()}
-                    </div>
-                  )}
+                {isConnected && integration.lastSyncedAt && (
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-3">
+                    <RefreshCw className="w-3 h-3" />
+                    Last synced {new Date(integration.lastSyncedAt).toLocaleDateString()}
+                  </div>
+                )}
 
-                  <div className="ml-auto">
-                    {isConnected ? (
+                <div className="mt-auto pt-5 flex items-center gap-2 flex-wrap">
+                  {isConnected ? (
+                    <>
+                      {canSync && (
+                        <Button
+                          size="sm"
+                          className="bg-primary/20 text-primary border border-primary/30 hover:bg-primary hover:text-white flex items-center gap-1.5 flex-1"
+                          onClick={() => handleSync(integration.platform)}
+                          disabled={isSyncing}
+                        >
+                          {isSyncing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
+                          {isSyncing ? "Syncing…" : "Sync Now"}
+                        </Button>
+                      )}
                       <Button
                         variant="outline"
                         size="sm"
@@ -218,31 +249,27 @@ export default function Integrations() {
                       >
                         Disconnect
                       </Button>
-                    ) : isGoogle ? (
-                      <Button
-                        size="sm"
-                        className="bg-white text-gray-900 hover:bg-gray-100 flex items-center gap-2 font-medium"
-                        onClick={() => handleGoogleConnect(integration.platform)}
-                      >
-                        <GoogleIcon />
-                        Sign in with Google
-                      </Button>
-                    ) : (
-                      <Button
-                        size="sm"
-                        className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2"
-                        onClick={() => handleSimpleConnect(integration.platform)}
-                        disabled={isConnecting}
-                      >
-                        {isConnecting ? (
-                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        ) : (
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        )}
-                        {isConnecting ? "Connecting…" : "Connect"}
-                      </Button>
-                    )}
-                  </div>
+                    </>
+                  ) : isGoogle ? (
+                    <Button
+                      size="sm"
+                      className="bg-white text-gray-900 hover:bg-gray-100 flex items-center gap-2 font-medium w-full justify-center"
+                      onClick={() => handleGoogleConnect(integration.platform)}
+                    >
+                      <GoogleIcon />
+                      Sign in with Google
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 w-full justify-center"
+                      onClick={() => handleSimpleConnect(integration.platform)}
+                      disabled={isConnecting}
+                    >
+                      {isConnecting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ExternalLink className="w-3.5 h-3.5" />}
+                      {isConnecting ? "Connecting…" : "Connect"}
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>
