@@ -17,7 +17,6 @@ import {
   ChevronRight,
   Zap,
   CreditCard,
-  GitBranch,
   Radio,
   BarChart2,
   Inbox,
@@ -66,7 +65,6 @@ const NAV_SECTIONS = [
       { href: "/analytics",    label: "Analytics",    icon: BarChart2 },
       { href: "/reports",      label: "Reports",      icon: FileText },
       { href: "/pricing",      label: "Billing",      icon: CreditCard },
-      { href: "/jira",         label: "Dev Tracker",  icon: GitBranch },
     ],
   },
 ];

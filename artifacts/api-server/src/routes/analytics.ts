@@ -211,6 +211,84 @@ Return ONLY a JSON array of insight strings (no markdown, no explanation outside
   }
 });
 
+router.get("/energy", requireAuth, async (req: any, res) => {
+  try {
+    const userId = req.userId;
+    const [decisions, outcomes] = await Promise.all([
+      db.select().from(decisionsTable).where(eq(decisionsTable.userId, userId)),
+      db.select().from(outcomesTable).where(eq(outcomesTable.userId, userId)),
+    ]);
+
+    const outcomeMap = new Map<string, number>();
+    outcomes.forEach((o) => { if (o.decisionId) outcomeMap.set(o.decisionId, o.score); });
+
+    // 5 time slots × 5 weekdays grid — collect scores per cell
+    const grid: number[][][] = Array.from({ length: 5 }, () => Array.from({ length: 5 }, () => []));
+    let peakSlot = { slot: 0, day: 0, score: -1 };
+    let worstSlot = { slot: 4, day: 4, score: 101 };
+
+    decisions.forEach((d) => {
+      const date = new Date(d.createdAt);
+      const dow = date.getDay(); // 0=Sun...6=Sat
+      if (dow === 0 || dow === 6) return;
+      const dayIdx = dow - 1; // Mon=0...Fri=4
+      const hour = date.getHours();
+      let slotIdx = -1;
+      if (hour >= 8 && hour < 10) slotIdx = 0;
+      else if (hour >= 10 && hour < 12) slotIdx = 1;
+      else if (hour >= 12 && hour < 14) slotIdx = 2;
+      else if (hour >= 14 && hour < 16) slotIdx = 3;
+      else if (hour >= 16 && hour < 19) slotIdx = 4;
+      if (slotIdx === -1) return;
+      const score = outcomeMap.get(d.id);
+      if (score != null) grid[slotIdx][dayIdx].push(score);
+    });
+
+    const heatmap = grid.map((row) =>
+      row.map((scores) => scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null)
+    );
+
+    // Find real peak and worst
+    heatmap.forEach((row, si) => {
+      row.forEach((score, di) => {
+        if (score !== null) {
+          if (score > peakSlot.score) peakSlot = { slot: si, day: di, score };
+          if (score < worstSlot.score) worstSlot = { slot: si, day: di, score };
+        }
+      });
+    });
+
+    const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+    const SLOT_LABELS = ["8–10am", "10–12pm", "12–2pm", "2–4pm", "4–7pm"];
+
+    // Context stats derived from real data
+    const decisionsWithOutcomes = decisions.filter((d) => outcomeMap.has(d.id));
+    const avgWithOutcome = decisionsWithOutcomes.length > 0
+      ? decisionsWithOutcomes.reduce((s, d) => s + (outcomeMap.get(d.id) ?? 0), 0) / decisionsWithOutcomes.length
+      : 0;
+
+    const morningDecisions = decisions.filter((d) => { const h = new Date(d.createdAt).getHours(); return h >= 6 && h < 12; });
+    const eveningDecisions = decisions.filter((d) => { const h = new Date(d.createdAt).getHours(); return h >= 16; });
+    const morningAvg = morningDecisions.length > 0 ? morningDecisions.reduce((s, d) => s + (outcomeMap.get(d.id) ?? avgWithOutcome), 0) / morningDecisions.length : null;
+    const eveningAvg = eveningDecisions.length > 0 ? eveningDecisions.reduce((s, d) => s + (outcomeMap.get(d.id) ?? avgWithOutcome), 0) / eveningDecisions.length : null;
+
+    return res.json({
+      heatmap,
+      hasRealData: outcomes.length > 0,
+      totalDecisions: decisions.length,
+      totalWithOutcomes: outcomes.length,
+      peakWindow: peakSlot.score > 0 ? { day: DAYS[peakSlot.day], slot: SLOT_LABELS[peakSlot.slot], score: peakSlot.score } : null,
+      worstWindow: worstSlot.score < 101 ? { day: DAYS[worstSlot.day], slot: SLOT_LABELS[worstSlot.slot], score: worstSlot.score } : null,
+      morningAvg: morningAvg !== null ? Math.round(morningAvg) : null,
+      eveningAvg: eveningAvg !== null ? Math.round(eveningAvg) : null,
+      morningVsEveningDelta: (morningAvg !== null && eveningAvg !== null) ? Math.round(morningAvg - eveningAvg) : null,
+    });
+  } catch (err) {
+    req.log.error({ err }, "Failed to get energy analytics");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.get("/blindspots", requireAuth, async (req: any, res) => {
   try {
     const userId = req.userId;

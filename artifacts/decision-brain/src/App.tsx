@@ -24,7 +24,6 @@ import Reports from "@/pages/Reports";
 import Chat from "@/pages/Chat";
 import Settings from "@/pages/Settings";
 import Pricing from "@/pages/Pricing";
-import JiraBoard from "@/pages/JiraBoard";
 import Analytics from "@/pages/Analytics";
 import LiveFeed from "@/pages/LiveFeed";
 import DecisionInbox from "@/pages/Inbox";
@@ -213,7 +212,6 @@ export default function App() {
               <ProtectedRoute path="/chat" component={Chat} />
               <ProtectedRoute path="/settings" component={Settings} />
               <ProtectedRoute path="/pricing" component={Pricing} />
-              <ProtectedRoute path="/jira" component={JiraBoard} />
               <ProtectedRoute path="/analytics" component={Analytics} />
               <ProtectedRoute path="/feed" component={LiveFeed} />
               <ProtectedRoute path="/inbox" component={DecisionInbox} />

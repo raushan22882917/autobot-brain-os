@@ -1,8 +1,15 @@
-import { useState } from "react";
-import { Users, TrendingUp, TrendingDown, Award, Plus, Star } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Users, TrendingUp, TrendingDown, Award, Plus, Star, BrainCircuit, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+
+type PatternData = {
+  totalPatterns: number;
+  aiInsights: string[];
+  decisionCount: number;
+  patternsByType: Record<string, number>;
+};
 
 type Advisor = {
   initials: string;
@@ -94,7 +101,6 @@ function AdvisorCard({ advisor }: { advisor: Advisor }) {
   return (
     <div className="rounded-xl border p-4 flex flex-col gap-3 hover:border-white/10 transition-all cursor-pointer"
       style={{ background: "#0a0a0a", borderColor: "#111" }}>
-      {/* Header */}
       <div className="flex items-center gap-3">
         <div className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-black shrink-0"
           style={{ background: `${advisor.accentColor}15`, color: advisor.accentColor, border: `1.5px solid ${advisor.accentColor}30` }}>
@@ -106,8 +112,6 @@ function AdvisorCard({ advisor }: { advisor: Advisor }) {
         </div>
         <ScoreRing score={advisor.accuracy} color={advisor.accentColor} />
       </div>
-
-      {/* Stats */}
       <div className="grid grid-cols-2 gap-y-1.5">
         {[
           { label: "Advice pieces", value: advisor.advicePieces },
@@ -121,22 +125,16 @@ function AdvisorCard({ advisor }: { advisor: Advisor }) {
           </div>
         ))}
       </div>
-
       {advisor.flag && (
         <div className="flex items-center gap-1.5 text-[10px] font-bold px-2 py-1 rounded"
           style={{ background: "rgba(239,68,68,0.08)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.15)" }}>
-          <TrendingDown className="w-3 h-3" />
-          {advisor.flag}
+          <TrendingDown className="w-3 h-3" /> {advisor.flag}
         </div>
       )}
-
-      {/* Mini bar */}
       <div>
         <MiniBar colors={advisor.barColors} heights={advisor.barHeights} />
         <p className="text-[9px] mt-1" style={{ color: "#333" }}>Accuracy — last 6 months</p>
       </div>
-
-      {/* Trend */}
       <div className="flex items-center gap-1.5 text-[10px]" style={{ color: advisor.accentColor }}>
         <TrendIcon className="w-3 h-3" />
         {advisor.trend === "up" ? "Accuracy improving" : advisor.trend === "down" ? "Accuracy declining" : "Accuracy stable"}
@@ -146,7 +144,29 @@ function AdvisorCard({ advisor }: { advisor: Advisor }) {
 }
 
 export default function AdvisorIntel() {
-  const [showAdd, setShowAdd] = useState(false);
+  const [patterns, setPatterns] = useState<PatternData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadingInsights, setLoadingInsights] = useState(false);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/analytics/patterns", { credentials: "include" });
+      if (res.ok) setPatterns(await res.json() as PatternData);
+    } catch {}
+    setLoading(false);
+  };
+
+  const refreshInsights = async () => {
+    setLoadingInsights(true);
+    try {
+      const res = await fetch("/api/analytics/patterns", { credentials: "include" });
+      if (res.ok) setPatterns(await res.json() as PatternData);
+    } catch {}
+    setLoadingInsights(false);
+  };
+
+  useEffect(() => { load(); }, []);
 
   const topAccuracy = Math.max(...ADVISORS.map((a) => a.accuracy));
   const lowestAccuracy = Math.min(...ADVISORS.map((a) => a.accuracy));
@@ -154,10 +174,12 @@ export default function AdvisorIntel() {
 
   const STAT_CARDS = [
     { label: "Advisors Tracked", value: ADVISORS.length, sub: "across 6 domains", icon: Users, color: "#DC2626" },
-    { label: "Advice Pieces", value: totalAdvice, sub: "+18 this month", icon: Star, color: "#8b5cf6", subColor: "#22c55e" },
-    { label: "Highest Accuracy", value: `${topAccuracy}%`, sub: ADVISORS.find((a) => a.accuracy === topAccuracy)?.name.split(" ")[1] ?? "", icon: Award, color: "#22c55e", subColor: "#22c55e" },
-    { label: "Needs Review", value: `${lowestAccuracy}%`, sub: ADVISORS.find((a) => a.accuracy === lowestAccuracy)?.name.split(" ")[1] ?? "", icon: TrendingDown, color: "#ef4444", subColor: "#ef4444" },
+    { label: "Your Decisions", value: loading ? "–" : (patterns?.decisionCount ?? 0), sub: "analyzed by Gemini", icon: Star, color: "#8b5cf6", subColor: "#8b5cf6" },
+    { label: "Highest Accuracy", value: `${topAccuracy}%`, sub: ADVISORS.find((a) => a.accuracy === topAccuracy)?.name.split(" ").slice(-1)[0] ?? "", icon: Award, color: "#22c55e", subColor: "#22c55e" },
+    { label: "Patterns Found", value: loading ? "–" : (patterns?.totalPatterns ?? 0), sub: "AI-detected", icon: TrendingDown, color: "#f97316", subColor: "#f97316" },
   ];
+
+  const aiInsights = patterns?.aiInsights ?? [];
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -170,8 +192,7 @@ export default function AdvisorIntel() {
           </p>
         </div>
         <Button size="sm" className="flex items-center gap-2 font-semibold"
-          style={{ background: "#DC2626", color: "white" }}
-          onClick={() => setShowAdd(true)}>
+          style={{ background: "#DC2626", color: "white" }}>
           <Plus className="w-4 h-4" />
           Add advisor
         </Button>
@@ -191,7 +212,11 @@ export default function AdvisorIntel() {
                     <Icon className="w-4 h-4" style={{ color: s.color }} />
                   </div>
                 </div>
-                <p className="text-4xl font-black text-white">{s.value}</p>
+                {loading && s.label !== "Advisors Tracked" && s.label !== "Highest Accuracy" ? (
+                  <Skeleton className="h-9 w-20 bg-white/5" />
+                ) : (
+                  <p className="text-4xl font-black text-white">{s.value}</p>
+                )}
                 <p className="text-[11px] mt-1" style={{ color: (s as any).subColor ?? "#555" }}>{s.sub}</p>
               </CardContent>
             </Card>
@@ -199,26 +224,73 @@ export default function AdvisorIntel() {
         })}
       </div>
 
-      {/* Advisor grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {ADVISORS.map((advisor) => (
-          <AdvisorCard key={advisor.initials} advisor={advisor} />
-        ))}
+      {/* Real AI insights from your decisions */}
+      {(loading || aiInsights.length > 0 || (patterns && patterns.decisionCount >= 3)) && (
+        <Card className="border-border bg-card">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <CardTitle className="text-white text-base font-bold flex items-center gap-2">
+                <BrainCircuit className="w-4 h-4 text-red-500" />
+                Gemini patterns from your {patterns?.decisionCount ?? "–"} decisions
+              </CardTitle>
+              <Button variant="outline" size="sm" onClick={refreshInsights} disabled={loadingInsights}
+                className="border-border text-muted-foreground hover:text-white flex items-center gap-1.5">
+                <RefreshCw className={`w-4 h-4 ${loadingInsights ? "animate-spin" : ""}`} />
+                Refresh
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-16 bg-white/5 rounded-xl" />)}
+              </div>
+            ) : aiInsights.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {aiInsights.map((insight, i) => (
+                  <div key={i} className="rounded-xl p-4 border" style={{ background: "#0a0a0a", borderColor: "#111" }}>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 text-white"
+                        style={{ background: "#DC2626" }}>
+                        {i + 1}
+                      </div>
+                      <p className="text-[12px] leading-relaxed" style={{ color: "#888" }}>{insight}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-6">
+                <p className="text-sm" style={{ color: "#444" }}>
+                  Log at least 3 decisions for Gemini to detect patterns in your decision-making.
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
-        {/* Add card */}
-        <div
-          onClick={() => setShowAdd(true)}
-          className="rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-3 min-h-52 cursor-pointer hover:border-white/10 transition-all"
-          style={{ borderColor: "#1a1a1a" }}>
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #1a1a1a" }}>
-            <Plus className="w-5 h-5" style={{ color: "#333" }} />
-          </div>
-          <div className="text-center">
-            <p className="text-sm font-semibold" style={{ color: "#555" }}>Add advisor to track</p>
-            <p className="text-[11px] mt-1 max-w-[160px]" style={{ color: "#333" }}>
-              Gemini will detect their advice from your calls & emails
-            </p>
+      {/* Advisor grid */}
+      <div>
+        <p className="text-[11px] font-bold uppercase tracking-[0.15em] mb-4" style={{ color: "#333" }}>
+          Advisor accuracy tracker
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {ADVISORS.map((advisor) => (
+            <AdvisorCard key={advisor.initials} advisor={advisor} />
+          ))}
+          <div className="rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-3 min-h-52 cursor-pointer hover:border-white/10 transition-all"
+            style={{ borderColor: "#1a1a1a" }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #1a1a1a" }}>
+              <Plus className="w-5 h-5" style={{ color: "#333" }} />
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-semibold" style={{ color: "#555" }}>Add advisor to track</p>
+              <p className="text-[11px] mt-1 max-w-[160px]" style={{ color: "#333" }}>
+                Gemini auto-detects their advice from your calls & emails
+              </p>
+            </div>
           </div>
         </div>
       </div>
