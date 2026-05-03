@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "name": "autobot-brain-os",
+  "builds": [
+    {
+      "src": "artifacts/api-server/dist/index.mjs",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "artifacts/decision-brain/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/artifacts/api-server/dist/index.mjs"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/artifacts/decision-brain/dist/$1"
+    }
+  ],
+  "functions": {
+    "artifacts/api-server/dist/index.mjs": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "buildCommand": "pnpm run build",
+  "outputDirectory": "artifacts/decision-brain/dist",
+  "installCommand": "pnpm install",
+  "framework": "vite"
+}

@@ -44,6 +44,13 @@ Thumbs.db
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
 
-# Replit
-.cache/
-.local/
+# Vercel
+.vercel
+
+# Environment files
+.env.local
+.env.production.local
+.env.development.local
+
+# Build artifacts
+.vercel/output
