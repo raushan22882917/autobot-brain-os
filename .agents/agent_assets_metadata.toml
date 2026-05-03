@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "51PYee1wWsZ8Ex7_SIS2X"
+uri = "file://artifacts/decision-brain/public/images/second-brain-animated.png"
+type = "image"
+title = "Founder second brain workflow"
