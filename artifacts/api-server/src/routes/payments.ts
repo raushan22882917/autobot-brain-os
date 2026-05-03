@@ -61,8 +61,8 @@ router.get("/plans", (_req, res) => {
       amountDisplay: `₹${(plan.amount / 100).toLocaleString("en-IN")}`,
     })),
     currency: "INR",
-    comingSoon: true,
-    message: "Payments will be live soon. Get early access by joining our waitlist.",
+    comingSoon: false,
+    message: "Payments are live. Secured by Razorpay.",
   });
 });
 
