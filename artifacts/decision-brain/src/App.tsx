@@ -1,7 +1,7 @@
 import { Switch, Route, Router as WouterRouter, Redirect } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ClerkProvider, SignIn, SignUp, Show, useClerk } from "@clerk/react";
-import { Linkedin, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
 import { useEffect, useRef } from "react";
@@ -134,35 +134,17 @@ function AuthImagePanel({ side }: { side: "left" | "right" }) {
   );
 }
 
-function SocialAuthButton({ label, href }: { label: string; href: string }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-[#2a3344] bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
-    >
-      <Linkedin className="w-4 h-4 text-[#7ab6ff]" />
-      {label}
-    </a>
-  );
-}
-
 function UnifiedAuthForm({
   title,
   subtitle,
   path,
   oppositePath,
-  socialLabel,
-  socialHref,
   isSignUp,
 }: {
   title: string;
   subtitle: string;
   path: string;
   oppositePath: string;
-  socialLabel: string;
-  socialHref: string;
   isSignUp: boolean;
 }) {
   return (
@@ -173,9 +155,6 @@ function UnifiedAuthForm({
         </p>
         <h1 className="text-4xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>{title}</h1>
         <p className="text-sm text-white/55 leading-relaxed">{subtitle}</p>
-      </div>
-      <div className="space-y-3 mb-5">
-        <SocialAuthButton label={socialLabel} href={socialHref} />
       </div>
       <div className="relative mb-5">
         <div className="absolute inset-0 flex items-center">
@@ -207,11 +186,8 @@ function SignInPage() {
         <UnifiedAuthForm
           title="Sign in to Autobot360"
           subtitle="Resume your decision OS and keep your team’s context in sync."
-          ctaLabel="Sign in"
           path={`${basePath}/sign-in`}
           oppositePath={`${basePath}/sign-up`}
-          socialLabel="Continue with LinkedIn"
-          socialHref="https://www.linkedin.com"
           isSignUp={false}
         />
       </div>
@@ -226,11 +202,8 @@ function SignUpPage() {
         <UnifiedAuthForm
           title="Build your decision OS"
           subtitle="Create your account and connect your first team signals in minutes."
-          ctaLabel="Create account"
           path={`${basePath}/sign-up`}
           oppositePath={`${basePath}/sign-in`}
-          socialLabel="Sign up with LinkedIn"
-          socialHref="https://www.linkedin.com"
           isSignUp={true}
         />
       </div>
