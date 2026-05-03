@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { apiUrl } from "@/lib/apiUrl";
 import { SiGmail, SiZoom, SiSlack, SiNotion } from "react-icons/si";
 import { Mail, RefreshCw, FileSignature, Video, Users, ExternalLink, CheckCircle2, Loader2, Zap } from "lucide-react";
 
@@ -85,13 +86,13 @@ export default function Integrations() {
   };
 
   const handleGoogleConnect = (platform: string) => {
-    window.location.href = `/api/integrations/google/auth?platform=${platform}`;
+    window.location.href = apiUrl(`/integrations/google/auth?platform=${platform}`);
   };
 
   const handleSimpleConnect = async (platform: string) => {
     setConnectingPlatform(platform);
     try {
-      const res = await fetch(`/api/integrations/${platform}/connect`, { method: "POST", credentials: "include" });
+      const res = await fetch(apiUrl(`/integrations/${platform}/connect`), { method: "POST", credentials: "include" });
       if (res.ok) {
         await queryClient.invalidateQueries({ queryKey: getListIntegrationsQueryKey() });
         await refetch();
@@ -112,7 +113,7 @@ export default function Integrations() {
     if (!syncKey) return;
     setSyncingPlatform(platform);
     try {
-      const res = await fetch(`/api/sync/${syncKey}`, { method: "POST", credentials: "include" });
+      const res = await fetch(apiUrl(`/sync/${syncKey}`), { method: "POST", credentials: "include" });
       const data = await res.json() as any;
       if (res.ok) {
         await refetch();

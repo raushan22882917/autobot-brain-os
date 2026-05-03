@@ -16,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { apiUrl } from "@/lib/apiUrl";
 
 type Decision = {
   id: string;
@@ -169,7 +170,7 @@ export default function DecisionInbox() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch("/api/decisions?limit=20&status=open", { credentials: "include" });
+        const res = await fetch(apiUrl("/decisions?limit=20&status=open"), { credentials: "include" });
         if (res.ok) {
           const data = await res.json() as any;
           setDecisions(data.decisions ?? data ?? []);

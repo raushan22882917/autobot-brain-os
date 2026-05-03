@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { apiUrl } from "@/lib/apiUrl";
 
 type Decision = {
   id: string;
@@ -147,9 +148,9 @@ export default function LiveFeed() {
       if (activePlatform !== "all") params.set("platform", activePlatform);
 
       const [feedRes, analyticsRes, integRes] = await Promise.all([
-        fetch(`/api/decisions?${params}`, { credentials: "include" }),
-        fetch("/api/analytics/overview", { credentials: "include" }),
-        fetch("/api/integrations", { credentials: "include" }),
+        fetch(apiUrl(`/decisions?${params}`), { credentials: "include" }),
+        fetch(apiUrl("/analytics/overview"), { credentials: "include" }),
+        fetch(apiUrl("/integrations"), { credentials: "include" }),
       ]);
 
       if (feedRes.ok) {

@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { apiUrl } from "@/lib/apiUrl";
 
 type Issue = {
   key: string;
@@ -147,7 +148,7 @@ export default function JiraBoard() {
 
   const fetchSummary = useCallback(async () => {
     try {
-      const res = await fetch("/api/jira/summary", { credentials: "include" });
+      const res = await fetch(apiUrl("/jira/summary"), { credentials: "include" });
       const data = await res.json() as any;
       if (!res.ok || !data.configured) { setConfigured(false); return; }
       setSummary(data);
@@ -160,7 +161,7 @@ export default function JiraBoard() {
       const params = new URLSearchParams();
       if (activeStatus) params.set("status", activeStatus);
       if (activeType) params.set("type", activeType);
-      const res = await fetch(`/api/jira/issues?${params}`, { credentials: "include" });
+      const res = await fetch(apiUrl(`/jira/issues?${params}`), { credentials: "include" });
       if (!res.ok) return;
       const data = await res.json() as any;
       setIssues(data.issues ?? []);
@@ -183,7 +184,7 @@ export default function JiraBoard() {
     if (!newIssue.summary.trim()) return;
     setCreateLoading(true);
     try {
-      const res = await fetch("/api/jira/issues", {
+      const res = await fetch(apiUrl("/jira/issues"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -207,7 +208,7 @@ export default function JiraBoard() {
   };
 
   const fetchTransitions = async (key: string) => {
-    const res = await fetch(`/api/jira/transitions/${key}`, { credentials: "include" });
+    const res = await fetch(apiUrl(`/jira/transitions/${key}`), { credentials: "include" });
     const data = await res.json() as any;
     setTransitions(data.transitions ?? []);
     setShowTransitions(true);
@@ -216,7 +217,7 @@ export default function JiraBoard() {
   const handleTransition = async (issueKey: string, transitionName: string) => {
     setTransitionLoading(true);
     try {
-      const res = await fetch(`/api/jira/issues/${issueKey}`, {
+      const res = await fetch(apiUrl(`/jira/issues/${issueKey}`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { apiUrl } from "@/lib/apiUrl";
 
 type Decision = {
   id: string;
@@ -112,7 +113,7 @@ export default function Briefing() {
     const fetchList = async () => {
       setLoadingList(true);
       try {
-        const res = await fetch("/api/decisions?limit=50", { credentials: "include" });
+        const res = await fetch(apiUrl("/decisions?limit=50"), { credentials: "include" });
         if (res.ok) {
           const data = await res.json() as { decisions: Decision[] };
           const sorted = (data.decisions ?? []).sort((a, b) => {
@@ -138,7 +139,7 @@ export default function Briefing() {
     const load = async () => {
       setLoadingDecision(true);
       try {
-        const res = await fetch(`/api/decisions/${routeId}`, { credentials: "include" });
+        const res = await fetch(apiUrl(`/decisions/${routeId}`), { credentials: "include" });
         if (res.ok) setDecision(await res.json() as Decision);
       } catch {}
       setLoadingDecision(false);
@@ -151,7 +152,7 @@ export default function Briefing() {
     setBrief([]);
     setRecommendation("");
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch(apiUrl("/chat"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

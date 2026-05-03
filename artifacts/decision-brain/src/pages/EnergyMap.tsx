@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { apiUrl } from "@/lib/apiUrl";
 
 type EnergyData = {
   heatmap: (number | null)[][];
@@ -62,7 +63,7 @@ export default function EnergyMap() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/analytics/energy", { credentials: "include" });
+      const res = await fetch(apiUrl("/analytics/energy"), { credentials: "include" });
       if (res.ok) {
         const json = await res.json() as EnergyData;
         setData(json);

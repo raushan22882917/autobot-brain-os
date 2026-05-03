@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { apiUrl } from "@/lib/apiUrl";
 
 type Subscription = {
   id: string;
@@ -78,8 +79,8 @@ export default function Billing() {
     const load = async () => {
       try {
         const [subRes, histRes] = await Promise.all([
-          fetch("/api/payments/subscription", { credentials: "include" }),
-          fetch("/api/payments/history", { credentials: "include" }),
+          fetch(apiUrl("/payments/subscription"), { credentials: "include" }),
+          fetch(apiUrl("/payments/history"), { credentials: "include" }),
         ]);
         if (subRes.ok) setBilling(await subRes.json() as BillingData);
         if (histRes.ok) {
@@ -96,7 +97,7 @@ export default function Billing() {
     if (!confirm("Cancel your subscription? You'll retain access until the end of the current billing period.")) return;
     setCancelling(true);
     try {
-      const res = await fetch("/api/payments/cancel", { method: "POST", credentials: "include" });
+      const res = await fetch(apiUrl("/payments/cancel"), { method: "POST", credentials: "include" });
       const data = await res.json() as any;
       if (res.ok) {
         toast({ title: "Subscription Cancelled", description: `Access continues until ${fmt(data.currentPeriodEnd)}.` });

@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { apiUrl } from "@/lib/apiUrl";
 
 type Domain = {
   domain: string;
@@ -118,8 +119,8 @@ export default function AdvisorIntel() {
     else setLoading(true);
     try {
       const [aRes, pRes] = await Promise.all([
-        fetch("/api/analytics/advisors", { credentials: "include" }),
-        fetch("/api/analytics/patterns", { credentials: "include" }),
+        fetch(apiUrl("/analytics/advisors"), { credentials: "include" }),
+        fetch(apiUrl("/analytics/patterns"), { credentials: "include" }),
       ]);
       if (aRes.ok) setData(await aRes.json() as AdvisorsData);
       if (pRes.ok) setPatterns(await pRes.json() as PatternsData);

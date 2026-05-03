@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { apiUrl } from "@/lib/apiUrl";
 
 const PLANS = [
   {
@@ -113,7 +114,7 @@ export default function Pricing() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch("/api/payments/subscription", { credentials: "include" });
+        const res = await fetch(apiUrl("/payments/subscription"), { credentials: "include" });
         if (res.ok) {
           const data = await res.json() as any;
           setActivePlan(data.plan ?? "free");
@@ -137,7 +138,7 @@ export default function Pricing() {
 
     setLoadingPlan(planId);
     try {
-      const res = await fetch("/api/payments/create-order", {
+      const res = await fetch(apiUrl("/payments/create-order"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -174,7 +175,7 @@ export default function Pricing() {
         },
         theme: { color: "#DC2626" },
         handler: async (response: any) => {
-          const verifyRes = await fetch("/api/payments/verify", {
+          const verifyRes = await fetch(apiUrl("/payments/verify"), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",

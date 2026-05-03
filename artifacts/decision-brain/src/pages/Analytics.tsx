@@ -16,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { apiUrl } from "@/lib/apiUrl";
 
 type Overview = {
   totalDecisions: number;
@@ -99,8 +100,8 @@ export default function Analytics() {
   const fetchData = async () => {
     try {
       const [ovRes, outRes] = await Promise.all([
-        fetch("/api/analytics/overview", { credentials: "include" }),
-        fetch("/api/analytics/outcomes", { credentials: "include" }),
+        fetch(apiUrl("/analytics/overview"), { credentials: "include" }),
+        fetch(apiUrl("/analytics/outcomes"), { credentials: "include" }),
       ]);
       if (ovRes.ok) setOverview(await ovRes.json() as Overview);
       if (outRes.ok) setOutcomes(await outRes.json() as OutcomeAnalytics);

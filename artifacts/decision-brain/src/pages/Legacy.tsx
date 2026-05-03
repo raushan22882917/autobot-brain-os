@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { apiUrl } from "@/lib/apiUrl";
 
 type OverviewData = {
   totalDecisions: number;
@@ -85,7 +86,7 @@ export default function Legacy() {
 
   const loadOverview = async () => {
     try {
-      const res = await fetch("/api/analytics/overview", { credentials: "include" });
+      const res = await fetch(apiUrl("/analytics/overview"), { credentials: "include" });
       if (res.ok) setOverview(await res.json() as OverviewData);
     } catch {}
     setLoading(false);
@@ -97,7 +98,7 @@ export default function Legacy() {
     setGenerating(true);
     try {
       const context = `Total decisions: ${data.totalDecisions}. Avg outcome score: ${data.avgOutcomeScore}%. Stakes: ${JSON.stringify(data.decisionsByStakes)}. Platforms: ${Object.keys(data.decisionsByPlatform).join(", ")}. Pending outcomes: ${data.pendingOutcomes}.`;
-      const res = await fetch("/api/chat", {
+      const res = await fetch(apiUrl("/chat"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -116,7 +117,7 @@ export default function Legacy() {
   useEffect(() => {
     const init = async () => {
       try {
-        const res = await fetch("/api/analytics/overview", { credentials: "include" });
+        const res = await fetch(apiUrl("/analytics/overview"), { credentials: "include" });
         if (res.ok) {
           const data = await res.json() as OverviewData;
           setOverview(data);
