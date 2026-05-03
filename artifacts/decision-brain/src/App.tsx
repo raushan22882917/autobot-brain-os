@@ -11,7 +11,6 @@ import { queryClient } from "@/lib/queryClient";
 import { Layout } from "@/components/Layout";
 import logoImage from "@assets/logo_1777805810138.png";
 
-// Pages
 import Landing from "@/pages/Landing";
 import Dashboard from "@/pages/Dashboard";
 import Decisions from "@/pages/Decisions";
@@ -44,17 +43,12 @@ import Product from "@/pages/Product";
 import IntegrationsPublic from "@/pages/IntegrationsPublic";
 import NotFound from "@/pages/not-found";
 
-const clerkPubKey = publishableKeyFromHost(
-  window.location.hostname,
-  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
-);
+const clerkPubKey = publishableKeyFromHost(window.location.hostname, import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 function stripBase(path: string): string {
-  return basePath && path.startsWith(basePath)
-    ? path.slice(basePath.length) || "/"
-    : path;
+  return basePath && path.startsWith(basePath) ? path.slice(basePath.length) || "/" : path;
 }
 
 if (!clerkPubKey) {
@@ -64,11 +58,7 @@ if (!clerkPubKey) {
 const clerkAppearance = {
   theme: shadcn,
   cssLayerName: "clerk",
-  options: {
-    logoPlacement: "inside" as const,
-    logoLinkUrl: basePath || "/",
-    logoImageUrl: `${window.location.origin}${basePath}/logo.svg`,
-  },
+  options: { logoPlacement: "inside" as const, logoLinkUrl: basePath || "/", logoImageUrl: `${window.location.origin}${basePath}/logo.svg` },
   variables: {
     colorPrimary: "hsl(245, 80%, 65%)",
     colorForeground: "hsl(210, 40%, 98%)",
@@ -120,34 +110,12 @@ function AuthImagePanel({ side }: { side: "left" | "right" }) {
   const q = AUTH_QUOTES[Math.floor(Math.random() * AUTH_QUOTES.length)];
   return (
     <div className="hidden lg:flex relative w-1/2 flex-col overflow-hidden">
-      <img
-        src={
-          side === "left"
-            ? "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80"
-            : "https://images.unsplash.com/photo-1553028826-f4804a6dba3b?w=1200&q=80"
-        }
-        alt="Executive workspace"
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ filter: "brightness(0.35) saturate(0.7)" }}
-      />
-      {/* Red gradient overlay */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            side === "left"
-              ? "linear-gradient(135deg, rgba(220,38,38,0.35) 0%, rgba(5,5,5,0.6) 100%)"
-              : "linear-gradient(225deg, rgba(220,38,38,0.35) 0%, rgba(5,5,5,0.6) 100%)",
-        }}
-      />
-      {/* Content */}
+      <img src={side === "left" ? "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80" : "https://images.unsplash.com/photo-1553028826-f4804a6dba3b?w=1200&q=80"} alt="Executive workspace" className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.35) saturate(0.7)" }} />
+      <div className="absolute inset-0" style={{ background: side === "left" ? "linear-gradient(135deg, rgba(220,38,38,0.35) 0%, rgba(5,5,5,0.6) 100%)" : "linear-gradient(225deg, rgba(220,38,38,0.35) 0%, rgba(5,5,5,0.6) 100%)" }} />
       <div className="relative z-10 flex flex-col justify-between h-full p-12">
-        {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "#DC2626" }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2a10 10 0 1 0 10 10" /><path d="M12 6v6l4 2" /><circle cx="19" cy="5" r="3" />
-            </svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 1 0 10 10" /><path d="M12 6v6l4 2" /><circle cx="19" cy="5" r="3" /></svg>
           </div>
           <div>
             <img src={logoImage} alt="Autobot360 logo" className="w-6 h-6 rounded-md object-cover" />
@@ -155,28 +123,10 @@ function AuthImagePanel({ side }: { side: "left" | "right" }) {
             <p className="text-[10px] font-semibold tracking-[0.18em] uppercase" style={{ color: "#DC2626" }}>Intelligence OS</p>
           </div>
         </div>
-
-        {/* Quote */}
         <div className="space-y-4">
           <div className="text-5xl font-serif leading-none mb-2" style={{ color: "rgba(220,38,38,0.8)" }}>"</div>
-          <p className="text-xl font-medium text-white leading-relaxed max-w-xs" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>
-            {q.quote}
-          </p>
+          <p className="text-xl font-medium text-white leading-relaxed max-w-xs" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>{q.quote}</p>
           <p className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.45)" }}>— {q.author}</p>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-4">
-          {[
-            { val: "94%", label: "Decision recall" },
-            { val: "3.2×", label: "Faster patterns" },
-            { val: "68%", label: "Fewer mistakes" },
-          ].map((s) => (
-            <div key={s.label} className="text-center">
-              <p className="text-2xl font-bold text-white">{s.val}</p>
-              <p className="text-[11px] mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>{s.label}</p>
-            </div>
-          ))}
         </div>
       </div>
     </div>
@@ -184,142 +134,45 @@ function AuthImagePanel({ side }: { side: "left" | "right" }) {
 }
 
 function SignInPage() {
-  return (
-    <div className="flex min-h-[100dvh]" style={{ background: "#080808" }}>
-      {/* Left — image */}
-      <AuthImagePanel side="left" />
-
-      {/* Right — form */}
-      <div className="flex flex-1 flex-col items-center justify-center px-6 py-12 relative overflow-hidden">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[400px] pointer-events-none"
-          style={{ background: "radial-gradient(ellipse, rgba(220,38,38,0.08) 0%, transparent 70%)" }} />
-        <div className="relative z-10 w-full max-w-md">
-          {/* Mobile logo */}
-          <div className="flex items-center gap-2.5 mb-8 lg:hidden">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#DC2626" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 2a10 10 0 1 0 10 10" /><path d="M12 6v6l4 2" /><circle cx="19" cy="5" r="3" />
-              </svg>
-            </div>
-            <img src={logoImage} alt="Autobot360 logo" className="w-5 h-5 rounded-md object-cover" />
-            <span className="font-bold text-white text-base">Autobot360</span>
-          </div>
-          <div className="mb-6">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-2" style={{ color: "#DC2626" }}>Welcome back</p>
-            <h1 className="text-3xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Sign in to your OS</h1>
-            <p className="text-sm mt-1" style={{ color: "#555" }}>Your decision intelligence is waiting.</p>
-          </div>
-          <SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} />
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="flex min-h-[100dvh]" style={{ background: "#080808" }}><AuthImagePanel side="left" /><div className="flex flex-1 flex-col items-center justify-center px-6 py-12 relative overflow-hidden"><div className="relative z-10 w-full max-w-md"><div className="mb-6"><p className="text-xs font-bold tracking-[0.2em] uppercase mb-2" style={{ color: "#DC2626" }}>Welcome back</p><h1 className="text-3xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Sign in to your OS</h1></div><SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} /></div></div></div>;
 }
 
 function SignUpPage() {
-  return (
-    <div className="flex min-h-[100dvh]" style={{ background: "#080808" }}>
-      {/* Left — form */}
-      <div className="flex flex-1 flex-col items-center justify-center px-6 py-12 relative overflow-hidden">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[400px] pointer-events-none"
-          style={{ background: "radial-gradient(ellipse, rgba(220,38,38,0.08) 0%, transparent 70%)" }} />
-        <div className="relative z-10 w-full max-w-md">
-          {/* Mobile logo */}
-          <div className="flex items-center gap-2.5 mb-8 lg:hidden">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#DC2626" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 2a10 10 0 1 0 10 10" /><path d="M12 6v6l4 2" /><circle cx="19" cy="5" r="3" />
-              </svg>
-            </div>
-            <img src={logoImage} alt="Autobot360 logo" className="w-5 h-5 rounded-md object-cover" />
-            <span className="font-bold text-white text-base">Autobot360</span>
-          </div>
-          <div className="mb-6">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-2" style={{ color: "#DC2626" }}>Get started free</p>
-            <h1 className="text-3xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Build your decision OS</h1>
-            <p className="text-sm mt-1" style={{ color: "#555" }}>Join executives who measure their judgment.</p>
-          </div>
-          <SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} />
-        </div>
-      </div>
-
-      {/* Right — image */}
-      <AuthImagePanel side="right" />
-    </div>
-  );
+  return <div className="flex min-h-[100dvh]" style={{ background: "#080808" }}><div className="flex flex-1 flex-col items-center justify-center px-6 py-12 relative overflow-hidden"><div className="relative z-10 w-full max-w-md"><div className="mb-6"><p className="text-xs font-bold tracking-[0.2em] uppercase mb-2" style={{ color: "#DC2626" }}>Get started free</p><h1 className="text-3xl font-bold text-white" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Build your decision OS</h1></div><SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} /></div></div><AuthImagePanel side="right" /></div>;
 }
 
 function ClerkQueryClientCacheInvalidator() {
   const { addListener } = useClerk();
   const prevUserIdRef = useRef<string | null | undefined>(undefined);
-
   useEffect(() => {
     const unsubscribe = addListener(({ user }) => {
       const userId = user?.id ?? null;
-      if (
-        prevUserIdRef.current !== undefined &&
-        prevUserIdRef.current !== userId
-      ) {
-        queryClient.clear();
-      }
+      if (prevUserIdRef.current !== undefined && prevUserIdRef.current !== userId) queryClient.clear();
       prevUserIdRef.current = userId;
     });
     return unsubscribe;
   }, [addListener]);
-
   return null;
 }
 
 function HomeRedirect() {
-  return (
-    <>
-      <Show when="signed-in">
-        <Redirect to="/dashboard" />
-      </Show>
-      <Show when="signed-out">
-        <Landing />
-      </Show>
-    </>
-  );
+  return (<><Show when="signed-in"><Redirect to="/dashboard" /></Show><Show when="signed-out"><Landing /></Show></>);
 }
 
 function ProtectedRoute({ component: Component, ...rest }: any) {
-  return (
-    <Route {...rest}>
-      <Show when="signed-in">
-        <Layout>
-          <Component />
-        </Layout>
-      </Show>
-      <Show when="signed-out">
-        <Redirect to="/" />
-      </Show>
-    </Route>
-  );
+  return (<Route {...rest}><Show when="signed-in"><Layout><Component /></Layout></Show><Show when="signed-out"><Redirect to="/" /></Show></Route>);
 }
 
 export default function App() {
   const handleSetLocation = (to: string, options?: { replace?: boolean }) => {
     const path = stripBase(to);
-    if (options?.replace) {
-      window.history.replaceState(null, "", basePath + path);
-    } else {
-      window.history.pushState(null, "", basePath + path);
-    }
+    if (options?.replace) window.history.replaceState(null, "", basePath + path); else window.history.pushState(null, "", basePath + path);
     window.dispatchEvent(new Event("popstate"));
   };
 
   return (
     <WouterRouter base={basePath}>
-      <ClerkProvider
-        publishableKey={clerkPubKey}
-        proxyUrl={clerkProxyUrl}
-        appearance={clerkAppearance}
-        signInUrl={`${basePath}/sign-in`}
-        signUpUrl={`${basePath}/sign-up`}
-        routerPush={(to) => handleSetLocation(to)}
-        routerReplace={(to) => handleSetLocation(to, { replace: true })}
-      >
+      <ClerkProvider publishableKey={clerkPubKey} proxyUrl={clerkProxyUrl} appearance={clerkAppearance} signInUrl={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} routerPush={(to) => handleSetLocation(to)} routerReplace={(to) => handleSetLocation(to, { replace: true })}>
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
             <ClerkQueryClientCacheInvalidator />
@@ -328,7 +181,6 @@ export default function App() {
               <ProtectedRoute path="/home" component={Landing} />
               <Route path="/sign-in/*?" component={SignInPage} />
               <Route path="/sign-up/*?" component={SignUpPage} />
-              
               <ProtectedRoute path="/dashboard" component={Dashboard} />
               <ProtectedRoute path="/decisions" component={Decisions} />
               <ProtectedRoute path="/decisions/:id" component={DecisionDetail} />
@@ -340,7 +192,7 @@ export default function App() {
               <ProtectedRoute path="/reports" component={Reports} />
               <ProtectedRoute path="/chat" component={Chat} />
               <ProtectedRoute path="/settings" component={Settings} />
-              <ProtectedRoute path="/pricing" component={Pricing} />
+              <Route path="/pricing" component={Pricing} />
               <ProtectedRoute path="/billing" component={Billing} />
               <ProtectedRoute path="/analytics" component={Analytics} />
               <Route path="/about" component={About} />
@@ -359,7 +211,6 @@ export default function App() {
               <ProtectedRoute path="/advisor" component={AdvisorIntel} />
               <ProtectedRoute path="/energy" component={EnergyMap} />
               <ProtectedRoute path="/legacy" component={Legacy} />
-              
               <Route component={NotFound} />
             </Switch>
             <Toaster />
