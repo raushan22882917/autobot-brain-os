@@ -135,11 +135,11 @@ router.get("/google/callback", async (req: any, res) => {
 
   if (error) {
     req.log.warn({ error }, "Google OAuth denied");
-    return res.redirect("/?integration_error=access_denied");
+    return res.redirect("/integrations?integration_error=access_denied");
   }
 
   if (!code || !state) {
-    return res.redirect("/?integration_error=missing_params");
+    return res.redirect("/integrations?integration_error=missing_params");
   }
 
   let userId: string;
@@ -149,13 +149,13 @@ router.get("/google/callback", async (req: any, res) => {
     userId = decoded.userId;
     platform = decoded.platform;
   } catch {
-    return res.redirect("/?integration_error=invalid_state");
+    return res.redirect("/integrations?integration_error=invalid_state");
   }
 
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
   if (!clientId || !clientSecret) {
-    return res.redirect("/?integration_error=not_configured");
+    return res.redirect("/integrations?integration_error=not_configured");
   }
 
   try {
