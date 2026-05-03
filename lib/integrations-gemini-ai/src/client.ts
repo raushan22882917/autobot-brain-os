@@ -1,15 +1,23 @@
 import { GoogleGenAI } from "@google/genai";
 
-const baseUrl = process.env.AI_INTEGRATIONS_GEMINI_BASE_URL;
-const apiKey = process.env.AI_INTEGRATIONS_GEMINI_API_KEY;
+const proxyBaseUrl = process.env.AI_INTEGRATIONS_GEMINI_BASE_URL;
+const proxyApiKey = process.env.AI_INTEGRATIONS_GEMINI_API_KEY;
+const directApiKey = process.env.GEMINI_API_KEY;
 
-export const ai: GoogleGenAI | null =
-  baseUrl && apiKey
-    ? new GoogleGenAI({
-        apiKey,
-        httpOptions: {
-          apiVersion: "",
-          baseUrl,
-        },
-      })
-    : null;
+function createClient(): GoogleGenAI | null {
+  if (proxyBaseUrl && proxyApiKey) {
+    return new GoogleGenAI({
+      apiKey: proxyApiKey,
+      httpOptions: {
+        apiVersion: "",
+        baseUrl: proxyBaseUrl,
+      },
+    });
+  }
+  if (directApiKey) {
+    return new GoogleGenAI({ apiKey: directApiKey });
+  }
+  return null;
+}
+
+export const ai: GoogleGenAI | null = createClient();

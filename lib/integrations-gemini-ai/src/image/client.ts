@@ -1,24 +1,32 @@
 import { GoogleGenAI, Modality } from "@google/genai";
 
-const baseUrl = process.env.AI_INTEGRATIONS_GEMINI_BASE_URL;
-const apiKey = process.env.AI_INTEGRATIONS_GEMINI_API_KEY;
+const proxyBaseUrl = process.env.AI_INTEGRATIONS_GEMINI_BASE_URL;
+const proxyApiKey = process.env.AI_INTEGRATIONS_GEMINI_API_KEY;
+const directApiKey = process.env.GEMINI_API_KEY;
 
-const ai: GoogleGenAI | null =
-  baseUrl && apiKey
-    ? new GoogleGenAI({
-        apiKey,
-        httpOptions: {
-          apiVersion: "",
-          baseUrl,
-        },
-      })
-    : null;
+function createClient(): GoogleGenAI | null {
+  if (proxyBaseUrl && proxyApiKey) {
+    return new GoogleGenAI({
+      apiKey: proxyApiKey,
+      httpOptions: {
+        apiVersion: "",
+        baseUrl: proxyBaseUrl,
+      },
+    });
+  }
+  if (directApiKey) {
+    return new GoogleGenAI({ apiKey: directApiKey });
+  }
+  return null;
+}
+
+const ai = createClient();
 
 export async function generateImage(
   prompt: string
 ): Promise<{ b64_json: string; mimeType: string }> {
   if (!ai) {
-    throw new Error("Gemini AI is not configured. Set AI_INTEGRATIONS_GEMINI_BASE_URL and AI_INTEGRATIONS_GEMINI_API_KEY.");
+    throw new Error("Gemini AI is not configured. Set GEMINI_API_KEY environment secret.");
   }
 
   const response = await ai.models.generateContent({
