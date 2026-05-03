@@ -32,6 +32,10 @@ import Briefing from "@/pages/Briefing";
 import AdvisorIntel from "@/pages/AdvisorIntel";
 import EnergyMap from "@/pages/EnergyMap";
 import Legacy from "@/pages/Legacy";
+import About from "@/pages/About";
+import Contact from "@/pages/Contact";
+import Terms from "@/pages/Terms";
+import Privacy from "@/pages/Privacy";
 import NotFound from "@/pages/not-found";
 
 const clerkPubKey = publishableKeyFromHost(
@@ -330,6 +334,10 @@ export default function App() {
               <ProtectedRoute path="/pricing" component={Pricing} />
               <ProtectedRoute path="/billing" component={Billing} />
               <ProtectedRoute path="/analytics" component={Analytics} />
+              <ProtectedRoute path="/about" component={About} />
+              <ProtectedRoute path="/contact" component={Contact} />
+              <ProtectedRoute path="/terms" component={Terms} />
+              <ProtectedRoute path="/privacy" component={Privacy} />
               <ProtectedRoute path="/feed" component={LiveFeed} />
               <ProtectedRoute path="/inbox" component={DecisionInbox} />
               <ProtectedRoute path="/briefing/:id" component={Briefing} />

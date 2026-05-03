@@ -1,10 +1,11 @@
 import { Link } from "wouter";
 import { BrainCircuit, Shield, Zap, Target, ChevronRight, Network, ArrowRight, TrendingUp, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
+const motionEase: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
-  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.65, delay: i * 0.12, ease: "easeOut" } }),
+  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.65, delay: i * 0.12, ease: motionEase } }),
 };
 
 const STATS = [
@@ -163,7 +164,7 @@ export default function Landing() {
                   How second brain works
                 </p>
                 <img
-                  src={`${import.meta.env.BASE_URL}images/second-brain-transparent.png`}
+                  src={`${import.meta.env.BASE_URL}images/second-brain-hero-premium.png`}
                   alt="How Decision Brain works for founders"
                   className="block w-full h-auto object-contain rounded-xl"
                 />
@@ -333,6 +334,8 @@ export default function Landing() {
               <div><Link href="/analytics"><span className="hover:text-white cursor-pointer">Analytics</span></Link></div>
               <div><Link href="/integrations"><span className="hover:text-white cursor-pointer">Integrations</span></Link></div>
               <div><Link href="/billing"><span className="hover:text-white cursor-pointer">Billing</span></Link></div>
+              <div><Link href="/about"><span className="hover:text-white cursor-pointer">About</span></Link></div>
+              <div><Link href="/contact"><span className="hover:text-white cursor-pointer">Contact</span></Link></div>
             </div>
           </div>
           <div>
@@ -341,6 +344,8 @@ export default function Landing() {
               <div><Link href="/dashboard"><span className="hover:text-white cursor-pointer">Dashboard</span></Link></div>
               <div><Link href="/pricing"><span className="hover:text-white cursor-pointer">Pricing</span></Link></div>
               <div><Link href="/sign-in"><span className="hover:text-white cursor-pointer">Sign in</span></Link></div>
+              <div><Link href="/terms"><span className="hover:text-white cursor-pointer">Terms & Conditions</span></Link></div>
+              <div><Link href="/privacy"><span className="hover:text-white cursor-pointer">Privacy Policy</span></Link></div>
             </div>
           </div>
           <div>
