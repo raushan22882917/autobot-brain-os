@@ -11,6 +11,7 @@ import chatRouter from "./chat";
 import syncRouter from "./sync";
 import paymentsRouter from "./payments";
 import jiraRouter from "./jira";
+import publicRouter from "./public";
 
 const router: IRouter = Router();
 
@@ -26,5 +27,6 @@ router.use("/chat", chatRouter);
 router.use("/sync", syncRouter);
 router.use("/payments", paymentsRouter);
 router.use("/jira", jiraRouter);
+router.use("/public", publicRouter);
 
 export default router;

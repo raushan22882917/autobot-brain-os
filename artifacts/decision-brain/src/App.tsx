@@ -343,15 +343,15 @@ export default function App() {
               <ProtectedRoute path="/pricing" component={Pricing} />
               <ProtectedRoute path="/billing" component={Billing} />
               <ProtectedRoute path="/analytics" component={Analytics} />
-              <ProtectedRoute path="/about" component={About} />
-              <ProtectedRoute path="/contact" component={Contact} />
-              <ProtectedRoute path="/product" component={Product} />
+              <Route path="/about" component={About} />
+              <Route path="/contact" component={Contact} />
+              <Route path="/product" component={Product} />
               <Route path="/integrations-public" component={IntegrationsPublic} />
               <ProtectedRoute path="/features" component={Features} />
               <ProtectedRoute path="/results" component={Results} />
               <ProtectedRoute path="/stories" component={Stories} />
-              <ProtectedRoute path="/terms" component={Terms} />
-              <ProtectedRoute path="/privacy" component={Privacy} />
+              <Route path="/terms" component={Terms} />
+              <Route path="/privacy" component={Privacy} />
               <ProtectedRoute path="/feed" component={LiveFeed} />
               <ProtectedRoute path="/inbox" component={DecisionInbox} />
               <ProtectedRoute path="/briefing/:id" component={Briefing} />

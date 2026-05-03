@@ -79,7 +79,7 @@ export default function Landing() {
             <Link href="/pricing">
               <span className="hover:text-white transition-colors cursor-pointer">Pricing</span>
             </Link>
-            <Link href="/integrations">
+            <Link href="/integrations-public">
               <span className="hover:text-white transition-colors cursor-pointer">Integrations</span>
             </Link>
           </nav>
