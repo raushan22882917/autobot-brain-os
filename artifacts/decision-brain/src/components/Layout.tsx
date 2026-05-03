@@ -64,7 +64,7 @@ const NAV_SECTIONS = [
       { href: "/integrations", label: "Integrations", icon: Plug },
       { href: "/analytics",    label: "Analytics",    icon: BarChart2 },
       { href: "/reports",      label: "Reports",      icon: FileText },
-      { href: "/pricing",      label: "Billing",      icon: CreditCard },
+      { href: "/billing",      label: "Billing",      icon: CreditCard },
     ],
   },
 ];
