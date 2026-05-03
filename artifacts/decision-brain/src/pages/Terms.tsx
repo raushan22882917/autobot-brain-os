@@ -5,7 +5,7 @@ export default function Terms() {
         <p className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color: "#DC2626" }}>Terms & Conditions</p>
         <h1 className="text-4xl font-bold" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Terms of use</h1>
         <p className="text-white/60 leading-relaxed">
-          This is a simple placeholder terms page for Decision Brain.
+          This is a simple placeholder terms page for Autobot360.
         </p>
       </div>
     </div>

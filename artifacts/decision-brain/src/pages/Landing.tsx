@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { BrainCircuit, Shield, Zap, Target, ChevronRight, Network, ArrowRight, TrendingUp, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
+import logoImage from "@assets/logo_1777805810138.png";
 const motionEase: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const fadeUp = {
@@ -38,7 +39,7 @@ const FEATURES = [
 
 const TESTIMONIALS = [
   {
-    quote: "Decision Brain surfaced a pattern I'd been blind to for two years — I was consistently under-resourced in Q3. The data was all there, I just couldn't see it.",
+    quote: "Autobot360 surfaced a pattern I'd been blind to for two years — I was consistently under-resourced in Q3. The data was all there, I just couldn't see it.",
     name: "CEO, Series C Fintech",
     avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=80&q=80",
   },
@@ -62,10 +63,8 @@ export default function Landing() {
       <header className="sticky top-0 z-50 border-b border-white/10 backdrop-blur-xl" style={{ background: "rgba(5,5,5,0.85)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#DC2626" }}>
-              <BrainCircuit className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-bold text-xl tracking-tight text-white">Decision Brain</span>
+            <img src={logoImage} alt="Autobot360 logo" className="w-8 h-8 rounded-lg object-cover" />
+            <span className="font-bold text-xl tracking-tight text-white">Autobot360</span>
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-white/60">
             <a href="#features" className="hover:text-white transition-colors">Features</a>
@@ -131,7 +130,7 @@ export default function Landing() {
               </h1>
 
               <p className="text-lg text-white/60 mb-10 leading-relaxed max-w-lg">
-                Decision Brain silently captures your choices, detects patterns, tracks outcomes, and alerts you to blind spots before they become liabilities.
+                Autobot360 silently captures your choices, detects patterns, tracks outcomes, and alerts you to blind spots before they become liabilities.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
@@ -165,7 +164,7 @@ export default function Landing() {
                 </p>
                 <img
                   src={`${import.meta.env.BASE_URL}images/second-brain-hero-premium.png`}
-                  alt="How Decision Brain works for founders"
+                  alt="How Autobot360 works for founders"
                   className="block w-full h-auto object-contain rounded-xl"
                 />
               </div>
@@ -322,7 +321,7 @@ export default function Landing() {
               <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "#DC2626" }}>
                 <BrainCircuit className="w-4 h-4 text-white" />
               </div>
-              <span className="font-bold text-white">Decision Brain</span>
+              <span className="font-bold text-white">Autobot360</span>
             </div>
             <p className="text-sm leading-relaxed text-white/40 max-w-xs">
               Capture decisions, connect your tools, and build a living second brain for your company.
@@ -358,7 +357,7 @@ export default function Landing() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/30">
-          <p>© {new Date().getFullYear()} Decision Brain OS. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Autobot360 OS. All rights reserved.</p>
           <div className="flex items-center gap-1.5">
             <Shield className="w-3.5 h-3.5" />
             Enterprise-grade security

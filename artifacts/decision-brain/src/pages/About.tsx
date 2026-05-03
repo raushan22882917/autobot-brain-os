@@ -15,7 +15,7 @@ export default function About() {
           </div>
         </div>
         <p className="text-white/60 text-lg max-w-3xl leading-relaxed">
-          Decision Brain helps founders and teams capture decisions, connect context, and learn from outcomes with a premium, privacy-first experience.
+          Autobot360 helps founders and teams capture decisions, connect context, and learn from outcomes with a premium, privacy-first experience.
         </p>
         <div className="grid md:grid-cols-3 gap-4">
           {[

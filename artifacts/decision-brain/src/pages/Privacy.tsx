@@ -5,7 +5,7 @@ export default function Privacy() {
         <p className="text-xs font-bold tracking-[0.2em] uppercase" style={{ color: "#DC2626" }}>Privacy Policy</p>
         <h1 className="text-4xl font-bold" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>Privacy overview</h1>
         <p className="text-white/60 leading-relaxed">
-          This is a simple placeholder privacy page for Decision Brain.
+          This is a simple placeholder privacy page for Autobot360.
         </p>
       </div>
     </div>

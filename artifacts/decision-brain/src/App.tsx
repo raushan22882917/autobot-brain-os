@@ -9,6 +9,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { queryClient } from "@/lib/queryClient";
 import { Layout } from "@/components/Layout";
+import logoImage from "@assets/logo_1777805810138.png";
 
 // Pages
 import Landing from "@/pages/Landing";
@@ -144,7 +145,8 @@ function AuthImagePanel({ side }: { side: "left" | "right" }) {
             </svg>
           </div>
           <div>
-            <p className="font-bold text-white text-[14px] tracking-wide">Decision Brain</p>
+            <img src={logoImage} alt="Autobot360 logo" className="w-6 h-6 rounded-md object-cover" />
+            <p className="font-bold text-white text-[14px] tracking-wide">Autobot360</p>
             <p className="text-[10px] font-semibold tracking-[0.18em] uppercase" style={{ color: "#DC2626" }}>Intelligence OS</p>
           </div>
         </div>
@@ -194,7 +196,8 @@ function SignInPage() {
                 <path d="M12 2a10 10 0 1 0 10 10" /><path d="M12 6v6l4 2" /><circle cx="19" cy="5" r="3" />
               </svg>
             </div>
-            <span className="font-bold text-white text-base">Decision Brain</span>
+            <img src={logoImage} alt="Autobot360 logo" className="w-5 h-5 rounded-md object-cover" />
+            <span className="font-bold text-white text-base">Autobot360</span>
           </div>
           <div className="mb-6">
             <p className="text-xs font-bold tracking-[0.2em] uppercase mb-2" style={{ color: "#DC2626" }}>Welcome back</p>
@@ -223,7 +226,8 @@ function SignUpPage() {
                 <path d="M12 2a10 10 0 1 0 10 10" /><path d="M12 6v6l4 2" /><circle cx="19" cy="5" r="3" />
               </svg>
             </div>
-            <span className="font-bold text-white text-base">Decision Brain</span>
+            <img src={logoImage} alt="Autobot360 logo" className="w-5 h-5 rounded-md object-cover" />
+            <span className="font-bold text-white text-base">Autobot360</span>
           </div>
           <div className="mb-6">
             <p className="text-xs font-bold tracking-[0.2em] uppercase mb-2" style={{ color: "#DC2626" }}>Get started free</p>

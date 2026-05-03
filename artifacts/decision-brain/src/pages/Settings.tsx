@@ -78,7 +78,7 @@ export default function Settings() {
       </div>
 
       {/* Profile details */}
-      <Section title="Personal Information" desc="Your identity within the Decision Brain OS.">
+      <Section title="Personal Information" desc="Your identity within the Autobot360 OS.">
         <SettingRow icon={User} label={user.fullName || "Name not set"} desc="Full name from your account" iconColor="#a78bfa"
           action={
             <div className="flex items-center gap-1 text-[11px]" style={{ color: "#333" }}>
@@ -116,7 +116,7 @@ export default function Settings() {
       </Section>
 
       {/* Notifications */}
-      <Section title="Notifications" desc="Control how Decision Brain alerts you.">
+      <Section title="Notifications" desc="Control how Autobot360 alerts you.">
         <SettingRow icon={Bell} label="Alert Notifications" desc="Be notified of new blind spots and patterns" iconColor="#f87171"
           action={
             <div className="px-2.5 py-1 rounded-full text-[10px] font-bold"

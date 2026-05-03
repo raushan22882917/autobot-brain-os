@@ -28,6 +28,7 @@ import {
 import { useState } from "react";
 import { useListAlerts } from "@workspace/api-client-react";
 import { cn } from "@/lib/utils";
+import logoImage from "@assets/logo_1777805810138.png";
 
 const NAV_SECTIONS = [
   {
@@ -75,7 +76,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const { signOut } = useClerk();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  const { data: alerts } = useListAlerts({ unread: true }, { query: { enabled: !!user } });
+  const { data: alerts } = useListAlerts({ unread: true }, { query: { enabled: !!user, queryKey: ["alerts", "unread"] } });
   const alertsArray = Array.isArray(alerts) ? alerts : [];
   const unreadCount = alertsArray.filter((a: any) => a.isRead === false).length || 0;
 
@@ -88,12 +89,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <div className="flex flex-col h-full" style={{ background: "#050505" }}>
       {/* Logo */}
       <div className="flex items-center gap-3 px-5 h-16 border-b shrink-0" style={{ borderColor: "#161616" }}>
-        <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 relative" style={{ background: "linear-gradient(135deg, #DC2626, #991b1b)" }}>
-          <BrainCircuit className="w-4.5 h-4.5 text-white" style={{ width: 18, height: 18 }} />
-          <div className="absolute inset-0 rounded-xl" style={{ boxShadow: "0 0 20px rgba(220,38,38,0.4)" }} />
-        </div>
+          <img src={logoImage} alt="Autobot360 logo" className="w-8 h-8 rounded-xl object-cover shrink-0" />
         <div>
-          <p className="font-bold text-white text-[13px] leading-tight tracking-wide">Decision Brain</p>
+          <p className="font-bold text-white text-[13px] leading-tight tracking-wide">Autobot360</p>
           <div className="flex items-center gap-1 mt-0.5">
             <Zap className="w-2.5 h-2.5" style={{ color: "#DC2626" }} />
             <p className="text-[9px] font-semibold tracking-[0.18em] uppercase" style={{ color: "#DC2626" }}>Intelligence OS</p>
@@ -158,7 +156,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {/* User footer */}
       <div className="px-3 pb-3 space-y-1.5 border-t pt-2.5" style={{ borderColor: "#161616" }}>
         <div className="flex items-center gap-3 px-3 py-2 rounded-xl" style={{ background: "#0f0f0f" }}>
-          <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 ring-2" style={{ ringColor: "#DC2626" }}>
+          <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 ring-2 ring-red-600">
             {user?.imageUrl ? (
               <img src={user.imageUrl} alt="Profile" className="w-full h-full object-cover" />
             ) : (
@@ -199,7 +197,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "#DC2626" }}>
             <BrainCircuit className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-white text-sm">Decision Brain</span>
+          <span className="font-bold text-white text-sm">Autobot360</span>
         </div>
         <button onClick={() => setIsMobileOpen(!isMobileOpen)} className="text-white/50 hover:text-white p-1.5 transition-colors">
           {isMobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -223,7 +221,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {/* Top header */}
         <div className="hidden md:flex items-center justify-between px-8 h-14 border-b shrink-0" style={{ background: "#050505", borderColor: "#161616" }}>
           <div className="flex items-center gap-2 text-[13px]">
-            <span style={{ color: "#333" }}>Decision Brain</span>
+            <span style={{ color: "#333" }}>Autobot360</span>
             <ChevronRight className="w-3 h-3" style={{ color: "#222" }} />
             <span className="text-white font-medium">{currentPage?.label || "Dashboard"}</span>
           </div>
