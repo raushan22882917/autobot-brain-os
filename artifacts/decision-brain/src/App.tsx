@@ -144,13 +144,20 @@ function UnifiedAuthForm({
   isSignUp: boolean;
 }) {
   return (
-    <>
+    <div className="w-full max-w-md rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(11,14,20,0.98))] p-8 shadow-2xl">
+      <div className="mb-6 flex items-center gap-3">
+        <img src={logoImage} alt="Autobot360 logo" className="h-11 w-11 rounded-xl object-cover" />
+        <div>
+          <p className="text-lg font-bold text-white leading-none">Autobot360</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.24em]" style={{ color: "#DC2626" }}>Intelligence OS</p>
+        </div>
+      </div>
       {isSignUp ? (
         <SignUp routing="path" path={path} signInUrl={oppositePath} />
       ) : (
         <SignIn routing="path" path={path} signUpUrl={oppositePath} />
       )}
-    </>
+    </div>
   );
 }
 
