@@ -227,6 +227,9 @@ router.get("/energy", requireAuth, async (req: any, res) => {
     let peakSlot = { slot: 0, day: 0, score: -1 };
     let worstSlot = { slot: 4, day: 4, score: 101 };
 
+    // Frequency grid — count all decisions per slot regardless of outcome
+    const freqGrid: number[][] = Array.from({ length: 5 }, () => Array(5).fill(0));
+
     decisions.forEach((d) => {
       const date = new Date(d.createdAt);
       const dow = date.getDay(); // 0=Sun...6=Sat
@@ -240,6 +243,7 @@ router.get("/energy", requireAuth, async (req: any, res) => {
       else if (hour >= 14 && hour < 16) slotIdx = 3;
       else if (hour >= 16 && hour < 19) slotIdx = 4;
       if (slotIdx === -1) return;
+      freqGrid[slotIdx][dayIdx]++;
       const score = outcomeMap.get(d.id);
       if (score != null) grid[slotIdx][dayIdx].push(score);
     });
@@ -247,6 +251,16 @@ router.get("/energy", requireAuth, async (req: any, res) => {
     const heatmap = grid.map((row) =>
       row.map((scores) => scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null)
     );
+
+    // Frequency heatmap normalised to 0-100 scale
+    const maxFreq = Math.max(1, ...freqGrid.flat());
+    const freqHeatmap = freqGrid.map((row) =>
+      row.map((count) => count > 0 ? Math.round((count / maxFreq) * 100) : null)
+    );
+    const hasMappedDecisions = decisions.some((d) => {
+      const dow = new Date(d.createdAt).getDay();
+      return dow !== 0 && dow !== 6;
+    });
 
     // Find real peak and worst
     heatmap.forEach((row, si) => {
@@ -274,7 +288,9 @@ router.get("/energy", requireAuth, async (req: any, res) => {
 
     return res.json({
       heatmap,
+      freqHeatmap,
       hasRealData: outcomes.length > 0,
+      hasMappedDecisions,
       totalDecisions: decisions.length,
       totalWithOutcomes: outcomes.length,
       peakWindow: peakSlot.score > 0 ? { day: DAYS[peakSlot.day], slot: SLOT_LABELS[peakSlot.slot], score: peakSlot.score } : null,
@@ -285,6 +301,87 @@ router.get("/energy", requireAuth, async (req: any, res) => {
     });
   } catch (err) {
     req.log.error({ err }, "Failed to get energy analytics");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/advisors", requireAuth, async (req: any, res) => {
+  try {
+    const userId = req.userId;
+    const [decisions, outcomes] = await Promise.all([
+      db.select().from(decisionsTable).where(eq(decisionsTable.userId, userId)).orderBy(desc(decisionsTable.createdAt)).limit(100),
+      db.select().from(outcomesTable).where(eq(outcomesTable.userId, userId)),
+    ]);
+
+    const outcomeMap = new Map<string, number>();
+    outcomes.forEach((o) => { if (o.decisionId) outcomeMap.set(o.decisionId, o.score); });
+
+    // Domain performance by tag
+    const domainMap = new Map<string, { count: number; scores: number[]; stakes: string[] }>();
+    decisions.forEach((d) => {
+      const tagsToUse = d.tags.length > 0 ? d.tags : [d.stakes + " stakes"];
+      tagsToUse.forEach((tag) => {
+        const existing = domainMap.get(tag) ?? { count: 0, scores: [], stakes: [] };
+        existing.count++;
+        existing.stakes.push(d.stakes);
+        const score = outcomeMap.get(d.id);
+        if (score != null) existing.scores.push(score);
+        domainMap.set(tag, existing);
+      });
+    });
+
+    const domains = Array.from(domainMap.entries()).map(([domain, { count, scores, stakes }]) => {
+      const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null;
+      const hasCritical = stakes.includes("critical") || stakes.includes("high");
+      return { domain, count, avgScore, hasOutcomes: scores.length > 0, hasCritical };
+    }).sort((a, b) => (a.avgScore ?? 50) - (b.avgScore ?? 50));
+
+    const stakesCounts: Record<string, number> = { low: 0, medium: 0, high: 0, critical: 0 };
+    decisions.forEach((d) => { stakesCounts[d.stakes] = (stakesCounts[d.stakes] ?? 0) + 1; });
+
+    // Gemini: generate advisor recommendations based on real decision patterns
+    let aiAdvisors: { name: string; initials: string; domain: string; reason: string; weakArea: string }[] = [];
+    if (decisions.length >= 1) {
+      try {
+        const weakDomains = domains.slice(0, 4).map((d) => d.domain).join(", ");
+        const decisionSample = decisions.slice(0, 20).map((d) => `${d.title} | ${d.stakes} | ${d.tags.join(",")}`).join("\n");
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: [{
+            role: "user",
+            parts: [{
+              text: `You are an executive advisor AI. This executive has made ${decisions.length} decisions with these patterns:
+
+${decisionSample}
+
+Stakes breakdown: ${JSON.stringify(stakesCounts)}
+Domains needing improvement: ${weakDomains || "general business strategy"}
+
+Recommend exactly 5 specific, real-world expert advisors this executive should consult. Pick real experts or archetypes that exactly match their decision history.
+
+Return ONLY a JSON array (no markdown):
+[
+  { "name": "Full Name", "initials": "XX", "domain": "Domain · Institution/Role", "reason": "Why they specifically help this executive's pattern", "weakArea": "which of the executive's weak areas they cover" }
+]`,
+            }],
+          }],
+          config: { maxOutputTokens: 4096 },
+        });
+        const text = (response.text ?? "[]").replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+        const start = text.indexOf("[");
+        const end = text.lastIndexOf("]");
+        if (start !== -1 && end !== -1) {
+          const parsed = JSON.parse(text.slice(start, end + 1));
+          if (Array.isArray(parsed)) aiAdvisors = parsed.slice(0, 5);
+        }
+      } catch {
+        aiAdvisors = [];
+      }
+    }
+
+    return res.json({ domains, aiAdvisors, totalDecisions: decisions.length, totalWithOutcomes: outcomes.length, stakesCounts });
+  } catch (err) {
+    req.log.error({ err }, "Failed to get advisor analytics");
     return res.status(500).json({ error: "Internal server error" });
   }
 });
